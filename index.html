@@ -1,0 +1,2954 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>另一双眼 - 小红花公益游戏</title>
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<style>
+/* ============ CSS 变量与全局样式 ============ */
+:root {
+  --primary-green: #7CB89E;
+  --primary-green-dark: #5A9E7A;
+  --primary-green-light: #8CC4A8;
+  --primary-green-pale: #E8F0EC;
+  --warm-orange: #7CB89E;
+  --warm-orange-dark: #5A9E7A;
+  --warm-peach: #E8F0EC;
+  --warm-cream: #F8FAF9;
+  --warm-white: #FFFFFF;
+  --warm-brown: #5D4037;
+  --warm-brown-light: #8D6E63;
+  --golden: #8CC4A8;
+  --soft-green: #66BB6A;
+  --soft-red: #EF5350;
+  --soft-blue: #64B5F6;
+  --flower-red: #E84A5F;
+  --flower-pink: #F4978E;
+  --card-shadow: 0 4px 20px rgba(92, 107, 102, 0.08);
+  --card-shadow-hover: 0 8px 32px rgba(92, 107, 102, 0.14);
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  background: url("背景图.png") no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+  color: var(--warm-brown);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* 背景装饰 - 覆盖在全屏背景图上方的柔和遮罩，确保内容可读性 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgba(248, 250, 249, 0.15);
+  pointer-events: none;
+  z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed;
+  top: -100px; right: -100px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(124,184,158,0.10) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* ============ 主容器 ============ */
+.app-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: safe center;
+}
+
+/* ============ 通用卡片样式 ============ */
+.card {
+  background: var(--warm-white);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  box-shadow: var(--card-shadow);
+  margin-bottom: 16px;
+  transition: var(--transition);
+  border: 1px solid rgba(232, 149, 106, 0.1);
+}
+
+.screen {
+  display: none;
+  animation: fadeIn 0.5s ease;
+}
+.screen.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============ 插画容器 ============ */
+.illustration-wrap {
+  width: 100%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 16px;
+  position: relative;
+}
+.illustration-wrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.scene-illustration {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 12px rgba(93,64,55,0.1);
+}
+.scene-illustration svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.character-portrait {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(135deg, rgba(232,240,236,0.3), rgba(248,250,249,0.5));
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  margin-bottom: 14px;
+  border: 1px solid rgba(124,184,158,0.12);
+}
+.character-portrait .portrait-svg {
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(93,64,55,0.12);
+}
+.character-portrait .portrait-svg svg {
+  width: 100%;
+  height: 100%;
+}
+.character-portrait .portrait-info {
+  flex: 1;
+}
+.character-portrait .portrait-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--warm-brown);
+}
+.character-portrait .portrait-desc {
+  font-size: 12px;
+  color: var(--warm-brown-light);
+  margin-top: 2px;
+}
+
+/* ============ 首页样式 ============ */
+.home-hero {
+  text-align: center;
+  padding: 20px 0 10px;
+}
+.home-hero svg { max-width: 320px; margin: 0 auto; }
+
+.home-title {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 38px;
+  font-weight: 400;
+  color: var(--warm-brown);
+  margin: 12px 0 4px;
+  letter-spacing: 2px;
+}
+.home-subtitle {
+  font-size: 14px;
+  color: var(--warm-brown-light);
+  margin-bottom: 8px;
+}
+
+.flower-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #E84A5F, #F4978E);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  box-shadow: 0 3px 10px rgba(232,74,95,0.25);
+}
+
+/* ============ 类型选择卡片 ============ */
+.type-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.type-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--warm-white);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 2px solid transparent;
+  box-shadow: var(--card-shadow);
+}
+.type-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow-hover);
+}
+.type-card.selected {
+  border-color: var(--warm-orange);
+  background: linear-gradient(135deg, rgba(124,184,158,0.06), rgba(232,240,236,0.1));
+}
+.type-card .type-icon {
+  width: 60px; height: 60px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+  overflow: hidden;
+  padding: 2px;
+}
+.type-card .type-icon img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  border-radius: 14px;
+}
+.type-card .type-icon svg { width: 36px; height: 36px; }
+.type-card .type-info { flex: 1; }
+.type-card .type-name { font-size: 16px; font-weight: 700; color: var(--warm-brown); }
+.type-card .type-desc { font-size: 13px; color: var(--warm-brown-light); margin-top: 2px; }
+.type-card .type-check {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--warm-peach);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: var(--transition);
+}
+.type-card.selected .type-check {
+  background: var(--warm-orange);
+  border-color: var(--warm-orange);
+}
+
+/* ============ 模式选择卡片 ============ */
+.section-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--warm-brown-light);
+  margin-bottom: 10px;
+  text-align: center;
+}
+.mode-grid {
+  display: flex;
+  gap: 12px;
+}
+.mode-card {
+  flex: 1;
+  background: var(--warm-white);
+  border-radius: 16px;
+  padding: 14px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  border: 2px solid transparent;
+  box-shadow: var(--card-shadow);
+}
+.mode-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow-hover);
+}
+.mode-card.selected {
+  border-color: var(--warm-orange);
+  background: linear-gradient(135deg, rgba(124,184,158,0.06), rgba(232,240,236,0.15));
+}
+.mode-card .mode-icon {
+  font-size: 32px;
+  margin-bottom: 6px;
+}
+.mode-card .mode-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--warm-brown);
+  margin-bottom: 2px;
+}
+.mode-card .mode-desc {
+  font-size: 11px;
+  color: var(--warm-brown-light);
+  line-height: 1.5;
+}
+.mode-card .mode-check {
+  display: inline-block;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--warm-peach);
+  margin-top: 6px;
+  transition: var(--transition);
+  font-size: 12px;
+  line-height: 18px;
+  color: white;
+}
+.mode-card.selected .mode-check {
+  background: var(--warm-orange);
+  border-color: var(--warm-orange);
+}
+
+/* ============ 按钮样式 ============ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: var(--radius-sm);
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--warm-orange), var(--warm-orange-dark));
+  color: white;
+  box-shadow: 0 4px 14px rgba(124,184,158,0.3);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(124,184,158,0.4); }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn-secondary {
+  background: var(--warm-white);
+  color: var(--warm-brown);
+  border: 1px solid var(--warm-peach);
+}
+.btn-secondary:hover { background: var(--warm-cream); }
+.btn-text {
+  background: transparent;
+  color: var(--warm-brown-light);
+  font-size: 14px;
+}
+.btn-text:hover { color: var(--warm-orange); }
+
+/* ============ 进度条 ============ */
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.progress-dots {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+}
+.progress-dot {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--warm-peach);
+  opacity: 0.5;
+  transition: var(--transition);
+}
+.progress-dot.active {
+  background: var(--warm-orange);
+  opacity: 1;
+}
+.progress-dot.done {
+  background: var(--soft-green);
+  opacity: 1;
+}
+.progress-text {
+  font-size: 13px;
+  color: var(--warm-brown-light);
+  white-space: nowrap;
+}
+
+/* ============ 场景标题 ============ */
+.scene-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.scene-stage-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.scene-stage-tag.child { background: rgba(124,184,158,0.15); color: #3D7A5E; }
+.scene-stage-tag.teen { background: rgba(92,107,102,0.12); color: #4A6A5E; }
+.scene-stage-tag.adult { background: rgba(124,184,158,0.15); color: #3D7A5E; }
+
+.scene-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--warm-brown);
+  margin-bottom: 10px;
+}
+.scene-text {
+  font-size: 15px;
+  color: var(--warm-brown);
+  line-height: 1.75;
+  margin-bottom: 16px;
+}
+
+/* ============ 选项样式 ============ */
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.choice-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--warm-cream);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: left;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--warm-brown);
+  line-height: 1.5;
+}
+.choice-btn:hover {
+  border-color: var(--warm-orange);
+  background: var(--warm-white);
+  transform: translateX(4px);
+}
+.choice-btn .choice-letter {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--warm-peach);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--warm-brown);
+  flex-shrink: 0;
+  transition: var(--transition);
+}
+.choice-btn:hover .choice-letter {
+  background: var(--warm-orange);
+  color: white;
+}
+
+/* ============ 反馈样式 ============ */
+.feedback-icon {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  margin: 0 auto 12px;
+}
+.feedback-icon.positive { background: rgba(102,187,106,0.15); }
+.feedback-icon.negative { background: rgba(239,83,80,0.15); }
+.feedback-icon.neutral { background: rgba(124,184,158,0.15); }
+
+.feedback-title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.feedback-text {
+  text-align: center;
+  font-size: 14px;
+  color: var(--warm-brown-light);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+.score-change {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+/* ============ 改造样式 ============ */
+.renovation-compare {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.renovation-side {
+  flex: 1;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.renovation-side .reno-label {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  text-align: center;
+}
+.renovation-side.before .reno-label { background: rgba(239,83,80,0.1); color: var(--soft-red); }
+.renovation-side.after .reno-label { background: rgba(102,187,106,0.1); color: var(--soft-green); }
+.renovation-side .reno-illust svg { width: 100%; height: auto; display: block; }
+.renovation-side .reno-text {
+  font-size: 12px;
+  padding: 8px 10px;
+  color: var(--warm-brown);
+  line-height: 1.5;
+  background: var(--warm-cream);
+}
+
+/* ============ 结局样式 ============ */
+.ending-hero {
+  text-align: center;
+  padding: 10px 0;
+}
+.ending-hero svg { max-width: 280px; margin: 0 auto; }
+.ending-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 800;
+  margin: 12px 0 4px;
+}
+.ending-rank {
+  text-align: center;
+  font-size: 14px;
+  color: var(--warm-brown-light);
+  margin-bottom: 12px;
+}
+.ending-score-display {
+  text-align: center;
+  margin-bottom: 16px;
+}
+.ending-score-display .score-num {
+  font-size: 40px;
+  font-weight: 900;
+  color: var(--warm-orange);
+}
+.ending-score-display .score-label {
+  font-size: 13px;
+  color: var(--warm-brown-light);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.stat-item {
+  text-align: center;
+  background: var(--warm-cream);
+  border-radius: var(--radius-sm);
+  padding: 12px 8px;
+}
+.stat-item .stat-val {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--warm-brown);
+}
+.stat-item .stat-label {
+  font-size: 11px;
+  color: var(--warm-brown-light);
+  margin-top: 2px;
+}
+
+/* ============ 工具栏 ============ */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.toolbar-left, .toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tool-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--warm-cream);
+  color: var(--warm-brown);
+}
+
+/* ============ Toast ============ */
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  background: var(--warm-brown);
+  color: white;
+  padding: 10px 24px;
+  border-radius: 20px;
+  font-size: 14px;
+  z-index: 9999;
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ============ 浮动花瓣 ============ */
+.petal {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+/* ============ 响应式 ============ */
+@media (max-width: 380px) {
+  .home-title { font-size: 30px; }
+  .scene-title { font-size: 18px; }
+  .renovation-compare { flex-direction: column; }
+}
+
+/* ============ 登录/注册页 ============ */
+.auth-card { max-width: 380px; margin: 0 auto; }
+.auth-tabs { display: flex; gap: 0; margin-bottom: 20px; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid rgba(124,184,158,0.2); }
+.auth-tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; font-size: 14px; font-weight: 600; background: var(--warm-white); color: var(--warm-brown-light); border: none; font-family: inherit; transition: var(--transition); }
+.auth-tab.active { background: linear-gradient(135deg, var(--warm-orange), var(--warm-orange-dark)); color: white; }
+.auth-form { display: none; }
+.auth-form.active { display: block; }
+.auth-field { margin-bottom: 14px; }
+.auth-field label { display: block; font-size: 13px; font-weight: 600; color: var(--warm-brown); margin-bottom: 6px; }
+.auth-field input { width: 100%; padding: 12px 14px; border: 1.5px solid rgba(124,184,158,0.2); border-radius: var(--radius-sm); font-size: 15px; font-family: inherit; color: var(--warm-brown); background: var(--warm-cream); outline: none; transition: var(--transition); }
+.auth-field input:focus { border-color: var(--warm-orange); box-shadow: 0 0 0 3px rgba(124,184,158,0.1); }
+.auth-error { color: var(--soft-red); font-size: 13px; text-align: center; margin-bottom: 10px; min-height: 20px; }
+
+/* ============ 地图页 ============ */
+.map-header { display: flex; align-items: center; justify-content: space-between; background: var(--warm-white); border-radius: var(--radius-md); padding: 12px 16px; margin-bottom: 12px; box-shadow: var(--card-shadow); border: 1px solid rgba(124,184,158,0.1); }
+.map-header-left { display: flex; align-items: center; gap: 10px; }
+.map-header-right { display: flex; align-items: center; gap: 8px; }
+.map-user-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--warm-orange), var(--warm-orange-dark)); display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: 700; }
+.map-user-name { font-size: 14px; font-weight: 700; color: var(--warm-brown); }
+.map-chip { display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; background: var(--warm-cream); color: var(--warm-brown); }
+.map-chip.score { background: rgba(124,184,158,0.12); color: #3D7A5E; }
+.map-progress-text { font-size: 11px; color: var(--warm-brown-light); text-align: center; margin-bottom: 8px; }
+.map-container { position: relative; width: 100%; aspect-ratio: 4/5; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--card-shadow); border: 2px solid rgba(124,184,158,0.15); background: linear-gradient(180deg, #E8F5E9 0%, #C8E6C9 20%, #A5D6A7 40%, #81C784 55%, #B0BEC5 65%, #90A4AE 80%, #78909C 100%); }
+.map-bg-elements { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.map-city-svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.map-landmark { position: absolute; transform: translate(-50%,-50%); z-index: 10; cursor: pointer; transition: all 0.35s cubic-bezier(0.4,0,0.2,1); }
+.map-landmark:hover { z-index: 20; }
+.map-landmark:hover .landmark-dot { transform: scale(1.25); box-shadow: 0 0 0 8px rgba(124,184,158,0.2); }
+.map-landmark:hover .landmark-label { opacity: 1; transform: translate(-50%,2px); }
+.landmark-dot { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--warm-orange), var(--warm-orange-dark)); box-shadow: 0 4px 14px rgba(124,184,158,0.35); display: flex; align-items: center; justify-content: center; font-size: 18px; transition: all 0.35s ease; border: 3px solid white; position: relative; }
+.landmark-dot.completed { background: linear-gradient(135deg, #BDBDBD, #9E9E9E); box-shadow: 0 2px 6px rgba(0,0,0,0.1); opacity: 0.7; border-color: #E0E0E0; }
+.landmark-dot.completed::after { content: '✓'; position: absolute; bottom: -2px; right: -2px; width: 18px; height: 18px; background: var(--soft-green); border-radius: 50%; font-size: 10px; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white; }
+.landmark-label { position: absolute; top: 100%; left: 50%; transform: translate(-50%,4px); background: var(--warm-brown); color: white; padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; white-space: nowrap; opacity: 0; transition: all 0.3s ease; pointer-events: none; }
+
+/* ============ Modal 遮罩 ============ */
+.modal-overlay { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.5); align-items: flex-start; justify-content: center; padding: 40px 16px 80px; overflow-y: auto; }
+.modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
+.modal-content { background: var(--warm-white); border-radius: var(--radius-lg); max-width: 520px; width: 100%; box-shadow: 0 16px 48px rgba(0,0,0,0.2); position: relative; animation: modalSlideUp 0.35s cubic-bezier(0.4,0,0.2,1); }
+@keyframes modalSlideUp { from { opacity: 0; transform: translateY(30px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.modal-close { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.06); border: none; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--warm-brown-light); z-index: 10; transition: var(--transition); }
+.modal-close:hover { background: rgba(0,0,0,0.12); color: var(--warm-brown); }
+.modal-inner { padding: 24px 20px; }
+.btn-sm { padding: 8px 16px; font-size: 13px; border-radius: 8px; }
+.btn-logout { background: none; border: 1px solid rgba(124,184,158,0.3); color: var(--warm-brown-light); padding: 4px 10px; border-radius: 8px; font-size: 12px; cursor: pointer; font-family: inherit; transition: var(--transition); }
+.btn-logout:hover { background: rgba(124,184,158,0.08); color: var(--warm-brown); }
+
+/* ============ 模式切换 ============ */
+.mode-toggle {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.mode-toggle:hover { background: rgba(255,255,255,0.3); }
+.mode-toggle-label { font-size: 14px; font-weight: 600; color: #AED4E8; }
+.mode-toggle-hint { font-size: 11px; color: rgba(174,212,232,0.85); }
+
+/* 地标脉冲动画 */
+@keyframes landmarkPulse {
+  0% { box-shadow: 0 0 0 0 rgba(124,184,158,0.5); }
+  70% { box-shadow: 0 0 0 12px rgba(124,184,158,0); }
+  100% { box-shadow: 0 0 0 0 rgba(124,184,158,0); }
+}
+.landmark-dot.pulse {
+  animation: landmarkPulse 2s infinite;
+}
+
+/* ============ 地标选择列表 ============ */
+.landmark-type-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.landmark-type-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--warm-cream);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: left;
+}
+.landmark-type-item:hover {
+  border-color: var(--warm-orange);
+  background: var(--warm-white);
+  transform: translateX(4px);
+}
+.landmark-type-item.completed {
+  background: #f5f5f5;
+  border-color: #e0e0e0;
+  cursor: default;
+  opacity: 0.7;
+}
+.landmark-type-item.completed:hover {
+  transform: none;
+  border-color: #e0e0e0;
+}
+.landmark-type-item .type-icon-small {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  overflow: hidden;
+  padding: 2px;
+}
+.landmark-type-item .type-icon-small img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.landmark-type-item .type-info { flex: 1; }
+.landmark-type-item .type-name { font-size: 15px; font-weight: 700; color: var(--warm-brown); }
+.landmark-type-item .type-desc { font-size: 12px; color: var(--warm-brown-light); margin-top: 2px; }
+.landmark-type-item .type-status {
+  font-size: 12px; font-weight: 600;
+  padding: 2px 8px; border-radius: 8px;
+  white-space: nowrap;
+}
+.landmark-type-item .type-status.done { background: rgba(102,187,106,0.15); color: var(--soft-green); }
+.landmark-type-item .type-status.todo { background: rgba(124,184,158,0.12); color: var(--warm-orange); }
+
+/* 底部进度条 */
+.map-progress-bar {
+  background: var(--warm-white);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  margin-top: 12px;
+  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(124,184,158,0.1);
+  text-align: center;
+}
+.map-progress-bar .progress-track {
+  width: 100%; height: 8px; border-radius: 4px;
+  background: var(--warm-peach); opacity: 0.3;
+  margin-top: 8px; overflow: hidden;
+}
+.map-progress-bar .progress-fill {
+  height: 100%; border-radius: 4px;
+  background: linear-gradient(90deg, var(--warm-orange), var(--warm-orange-dark));
+  transition: width 0.5s ease;
+}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="app-container">
+
+  <!-- ============ 登录/注册页 ============ -->
+  <div class="screen active" id="screen-auth">
+    <div class="home-hero" style="margin-bottom:4px;">
+      <h1 class="home-title">另一双眼</h1>
+      <p class="home-subtitle">走进他们的世界，用理解点亮每一束光</p>
+    </div>
+    <div class="card auth-card">
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchAuthTab('login')">登录</button>
+        <button class="auth-tab" onclick="switchAuthTab('register')">注册</button>
+      </div>
+      <div class="auth-form active" id="login-form">
+        <div class="auth-field"><label>用户名</label><input type="text" id="login-username" placeholder="请输入用户名"></div>
+        <div class="auth-field"><label>密码</label><input type="password" id="login-password" placeholder="请输入密码"></div>
+        <div class="auth-error" id="login-error"></div>
+        <button class="btn btn-primary" style="width:100%;" onclick="doLogin()">登录</button>
+      </div>
+      <div class="auth-form" id="register-form">
+        <div class="auth-field"><label>用户名</label><input type="text" id="reg-username" placeholder="请输入用户名"></div>
+        <div class="auth-field"><label>密码</label><input type="password" id="reg-password" placeholder="请输入密码（至少4位）"></div>
+        <div class="auth-error" id="reg-error"></div>
+        <button class="btn btn-primary" style="width:100%;" onclick="doRegister()">注册</button>
+      </div>
+    </div>
+
+    <!-- 模式选择 -->
+    <div style="text-align:center;margin-top:12px;">
+      <div class="mode-toggle" id="mode-toggle" onclick="toggleModeAuth()">
+        <span class="mode-toggle-label" id="mode-toggle-label">🎭 沉浸模式</span>
+        <span class="mode-toggle-hint">点击切换体验视角</span>
+      </div>
+    </div>
+
+    <p style="text-align:center;font-size:12px;color:#ffffff;margin-top:12px;line-height:1.6;">
+      本游戏旨在增进对残障伙伴的理解与共情<br>所有场景改编自真实生活经历
+    </p>
+  </div>
+
+  <!-- ============ 地图页 ============ -->
+  <div class="screen" id="screen-map">
+    <div class="map-header">
+      <div class="map-header-left">
+        <div class="map-user-avatar" id="map-avatar"></div>
+        <div>
+          <div class="map-user-name" id="map-username"></div>
+          <div class="map-progress-text" id="map-progress" style="margin:0;text-align:left;"></div>
+        </div>
+      </div>
+      <div class="map-header-right">
+        <div class="map-chip" id="map-mode" onclick="toggleModeMap()" style="cursor:pointer;">🎭 沉浸模式</div>
+        <div class="map-chip score" id="map-score">❤️ 0</div>
+        <button class="btn-logout" onclick="doLogout()">退出</button>
+      </div>
+    </div>
+
+    <div class="map-container" id="map-container">
+      <!-- 第一版设计：SVG绘制的城市地图 -->
+      <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" class="map-city-svg" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bldg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#B0BFB5"/><stop offset="100%" stop-color="#96A89A"/></linearGradient>
+          <linearGradient id="bldg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#B8C5BC"/><stop offset="100%" stop-color="#A0B2A4"/></linearGradient>
+          <linearGradient id="bldg3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C0CCC2"/><stop offset="100%" stop-color="#A8B8AC"/></linearGradient>
+          <linearGradient id="water" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#C0D8CC" stop-opacity="0.3"/><stop offset="100%" stop-color="#B0CCC0" stop-opacity="0.4"/></linearGradient>
+        </defs>
+        <!-- 道路 -->
+        <rect x="0" y="240" width="400" height="28" rx="2" fill="#DCE3DE" opacity="0.55"/>
+        <rect x="0" y="345" width="400" height="22" rx="2" fill="#DCE3DE" opacity="0.35"/>
+        <rect x="165" y="0" width="20" height="500" fill="#DCE3DE" opacity="0.25"/>
+        <rect x="305" y="0" width="14" height="500" fill="#DCE3DE" opacity="0.18"/>
+        <!-- 道路标线 -->
+        <rect x="15" y="252.5" width="22" height="3" rx="1" fill="#BCC8C0" opacity="0.5"/>
+        <rect x="55" y="252.5" width="18" height="3" rx="1" fill="#BCC8C0" opacity="0.5"/>
+        <rect x="95" y="252.5" width="20" height="3" rx="1" fill="#BCC8C0" opacity="0.5"/>
+        <rect x="195" y="252.5" width="22" height="3" rx="1" fill="#BCC8C0" opacity="0.5"/>
+        <rect x="250" y="252.5" width="18" height="3" rx="1" fill="#BCC8C0" opacity="0.5"/>
+        <rect x="330" y="252.5" width="20" height="3" rx="1" fill="#BCC8C0" opacity="0.5"/>
+        <!-- 河流 -->
+        <path d="M 0 420 Q 80 405 160 415 Q 240 425 320 412 Q 360 406 400 410 L 400 460 Q 300 435 200 450 Q 100 445 0 460 Z" fill="url(#water)"/>
+        <!-- 🏫 学校区域 (20%,15%) -->
+        <rect x="28" y="30" width="38" height="60" rx="2" fill="url(#bldg1)"/>
+        <rect x="33" y="14" width="28" height="20" rx="2" fill="url(#bldg2)"/>
+        <rect x="36" y="10" width="6" height="6" rx="1" fill="#D0D8D3" opacity="0.5"/>
+        <rect x="52" y="10" width="6" height="6" rx="1" fill="#D0D8D3" opacity="0.5"/>
+        <rect x="12" y="74" width="22" height="22" rx="2" fill="url(#bldg3)"/>
+        <!-- 🏥 医院区域 (25%,35%) -->
+        <rect x="50" y="125" width="48" height="52" rx="3" fill="url(#bldg2)"/>
+        <rect x="54" y="108" width="14" height="22" rx="2" fill="url(#bldg1)"/>
+        <rect x="78" y="108" width="14" height="22" rx="2" fill="url(#bldg1)"/>
+        <rect x="42" y="160" width="22" height="24" rx="2" fill="url(#bldg3)"/>
+        <rect x="57" y="118" width="6" height="4" rx="1" fill="#E8EDE9" opacity="0.4"/>
+        <rect x="81" y="118" width="6" height="4" rx="1" fill="#E8EDE9" opacity="0.4"/>
+        <!-- 🏢 办公楼区域 (70%,40%) -->
+        <rect x="250" y="95" width="24" height="95" rx="3" fill="url(#bldg1)"/>
+        <rect x="278" y="75" width="32" height="115" rx="3" fill="url(#bldg2)"/>
+        <rect x="314" y="105" width="20" height="85" rx="2" fill="url(#bldg3)"/>
+        <!-- 办公楼窗户 -->
+        <rect x="255" y="102" width="5" height="5" rx="0.5" fill="#E8EDE9" opacity="0.45"/>
+        <rect x="265" y="102" width="5" height="5" rx="0.5" fill="#E8EDE9" opacity="0.45"/>
+        <rect x="255" y="114" width="5" height="5" rx="0.5" fill="#E8EDE9" opacity="0.45"/>
+        <rect x="265" y="114" width="5" height="5" rx="0.5" fill="#E8EDE9" opacity="0.45"/>
+        <rect x="255" y="126" width="5" height="5" rx="0.5" fill="#E8EDE9" opacity="0.45"/>
+        <rect x="265" y="126" width="5" height="5" rx="0.5" fill="#E8EDE9" opacity="0.45"/>
+        <rect x="283" y="82" width="5" height="5" rx="0.5" fill="#E8EDE9" opacity="0.45"/>
+        <rect x="298" y="82" width="5" height="5" rx="0.5" fill="#E8EDE9" opacity="0.45"/>
+        <rect x="283" y="94" width="5" height="5" rx="0.5" fill="#E8EDE9" opacity="0.45"/>
+        <rect x="298" y="94" width="5" height="5" rx="0.5" fill="#E8EDE9" opacity="0.45"/>
+        <rect x="283" y="106" width="5" height="5" rx="0.5" fill="#E8EDE9" opacity="0.45"/>
+        <rect x="298" y="106" width="5" height="5" rx="0.5" fill="#E8EDE9" opacity="0.45"/>
+        <!-- 🛍️ 商场区域 (20%,58%) -->
+        <rect x="14" y="238" width="64" height="38" rx="3" fill="url(#bldg2)"/>
+        <rect x="20" y="248" width="16" height="12" rx="2" fill="#E0E6E2" opacity="0.5"/>
+        <rect x="42" y="248" width="16" height="12" rx="2" fill="#E0E6E2" opacity="0.5"/>
+        <polygon points="46,225 52,238 40,238" fill="url(#bldg1)"/>
+        <rect x="22" y="265" width="48" height="8" rx="1" fill="url(#bldg3)"/>
+        <!-- 🚉 交通枢纽 (70%,70%) -->
+        <rect x="240" y="305" width="85" height="28" rx="3" fill="url(#bldg3)"/>
+        <rect x="248" y="314" width="18" height="12" rx="1" fill="#E0E6E2" opacity="0.5"/>
+        <rect x="272" y="314" width="18" height="12" rx="1" fill="#E0E6E2" opacity="0.5"/>
+        <rect x="296" y="314" width="18" height="12" rx="1" fill="#E0E6E2" opacity="0.5"/>
+        <rect x="278" y="292" width="10" height="18" rx="2" fill="url(#bldg1)"/>
+        <!-- 🌳 休闲区域 (45%,85%) 公园 -->
+        <circle cx="165" cy="400" r="28" fill="#C0D8CC" opacity="0.3"/>
+        <circle cx="182" cy="418" r="22" fill="#B4D0C4" opacity="0.25"/>
+        <circle cx="150" cy="422" r="18" fill="#C8DCD0" opacity="0.2"/>
+        <!-- 树木 -->
+        <circle cx="165" cy="382" r="10" fill="#8CC4A8"/>
+        <circle cx="180" cy="400" r="8" fill="#7CB89E"/>
+        <circle cx="148" cy="410" r="9" fill="#8CC4A8"/>
+        <circle cx="195" cy="415" r="7" fill="#7CB89E"/>
+        <circle cx="140" cy="395" r="6" fill="#7CB89E"/>
+        <!-- 散落树木 -->
+        <circle cx="105" cy="205" r="7" fill="#9CC8B0" opacity="0.6"/>
+        <circle cx="350" cy="215" r="6" fill="#9CC8B0" opacity="0.6"/>
+        <circle cx="375" cy="335" r="7" fill="#9CC8B0" opacity="0.5"/>
+        <circle cx="38" cy="390" r="6" fill="#9CC8B0" opacity="0.5"/>
+        <!-- 公交站 -->
+        <rect x="272" y="262" width="3" height="16" rx="1" fill="#A0ACA2" opacity="0.7"/>
+        <rect x="266" y="260" width="15" height="5" rx="1" fill="#A0ACA2" opacity="0.7"/>
+        <rect x="124" y="262" width="3" height="12" rx="1" fill="#A0ACA2" opacity="0.6"/>
+        <rect x="118" y="260" width="15" height="5" rx="1" fill="#A0ACA2" opacity="0.6"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ============ 结局页 ============ -->
+  <div class="screen" id="screen-ending">
+    <div class="card" id="ending-card" style="text-align:center;">
+      <!-- 动态内容 -->
+    </div>
+    <div style="text-align:center;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn btn-secondary" id="btn-replay">🔄 重新探索</button>
+      <button class="btn btn-primary" id="btn-home">🏠 回到地图</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ 地标选择 Modal ============ -->
+<div class="modal-overlay" id="landmark-modal">
+  <div class="modal-content" style="max-width:380px;">
+    <button class="modal-close" onclick="closeLandmarkModal()">✕</button>
+    <div class="modal-inner" id="landmark-modal-inner">
+      <!-- 动态内容 -->
+    </div>
+  </div>
+</div>
+
+<!-- ============ 事件 Modal ============ -->
+<div class="modal-overlay" id="event-modal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeEventModal()">✕</button>
+    <div class="modal-inner" id="modal-inner">
+      <!-- 动态内容 -->
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   SVG 插画系统 — 角色形象 & 场景画面
+   ============================================================ */
+
+// ---- 工具函数 ----
+function svgDef(id, stops) {
+  return `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1">${stops.map(s=>`<stop offset="${s[0]}" stop-color="${s[1]}"/>`).join('')}</linearGradient><radialGradient id="${id}_r" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="${stops[0][1]}"/><stop offset="100%" stop-color="${stops[stops.length-1][1]}"/></radialGradient></defs>`;
+}
+
+// ============ 角色插画 ============
+const CHAR_ART = {
+
+// ---- 肢体障碍：儿童 ----
+physical_child: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('pc_bg',[['0%','#FFF3E0'],['100%','#FFE0B2']])}
+  <rect width="200" height="200" rx="16" fill="url(#pc_bg_r)"/>
+  <!-- 学校剪影 -->
+  <rect x="125" y="35" width="65" height="70" rx="4" fill="#D4A88E" opacity="0.25"/>
+  <rect x="138" y="48" width="8" height="12" rx="1" fill="#FFF" opacity="0.4"/>
+  <rect x="155" y="48" width="8" height="12" rx="1" fill="#FFF" opacity="0.4"/>
+  <rect x="172" y="48" width="8" height="12" rx="1" fill="#FFF" opacity="0.4"/>
+  <polygon points="125,35 157,18 190,35" fill="#D4A88E" opacity="0.25"/>
+  <!-- 地面阴影 -->
+  <ellipse cx="95" cy="178" rx="62" ry="8" fill="#D7CCC8" opacity="0.4"/>
+  <!-- 轮椅大轮 -->
+  <circle cx="70" cy="152" r="26" fill="none" stroke="#8D6E63" stroke-width="3"/>
+  <circle cx="70" cy="152" r="20" fill="none" stroke="#BCAAA4" stroke-width="1"/>
+  <circle cx="70" cy="152" r="3" fill="#8D6E63"/>
+  <line x1="70" y1="132" x2="70" y2="172" stroke="#BCAAA4" stroke-width="0.8"/>
+  <line x1="50" y1="152" x2="90" y2="152" stroke="#BCAAA4" stroke-width="0.8"/>
+  <!-- 轮椅小轮 -->
+  <circle cx="120" cy="162" r="9" fill="none" stroke="#8D6E63" stroke-width="2"/>
+  <!-- 轮椅框架 -->
+  <path d="M 70 152 L 88 112 L 118 112 L 130 162" fill="none" stroke="#8D6E63" stroke-width="3" stroke-linejoin="round"/>
+  <line x1="82" y1="112" x2="115" y2="112" stroke="#8D6E63" stroke-width="3"/>
+  <!-- 座位 -->
+  <rect x="82" y="112" width="36" height="6" rx="2" fill="#A1887F"/>
+  <!-- 身体 -->
+  <path d="M 88 116 Q 86 96 102 94 Q 118 96 116 116 L 116 128 L 88 128 Z" fill="#F9A825"/>
+  <!-- 衣领 -->
+  <path d="M 96 96 L 102 100 L 108 96" fill="none" stroke="#F57F17" stroke-width="1.5"/>
+  <!-- 头 -->
+  <circle cx="102" cy="74" r="20" fill="#FFCC80"/>
+  <!-- 头发 -->
+  <path d="M 84 72 Q 82 55 102 51 Q 122 55 120 72 L 117 64 Q 102 48 87 64 Z" fill="#5D4037"/>
+  <path d="M 118 60 Q 124 58 122 66" fill="none" stroke="#5D4037" stroke-width="2" stroke-linecap="round"/>
+  <!-- 眼睛 -->
+  <circle cx="95" cy="74" r="2.5" fill="#5D4037"/>
+  <circle cx="109" cy="74" r="2.5" fill="#5D4037"/>
+  <circle cx="95.5" cy="73" r="0.8" fill="#FFF"/>
+  <circle cx="109.5" cy="73" r="0.8" fill="#FFF"/>
+  <!-- 嘴巴 -->
+  <path d="M 96 84 Q 102 88 108 84" fill="none" stroke="#5D4037" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- 腮红 -->
+  <circle cx="90" cy="80" r="3" fill="#FFAB91" opacity="0.5"/>
+  <circle cx="114" cy="80" r="3" fill="#FFAB91" opacity="0.5"/>
+  <!-- 手臂 -->
+  <path d="M 90 116 L 76 132" stroke="#FFCC80" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 114 116 L 128 130" stroke="#FFCC80" stroke-width="6" stroke-linecap="round"/>
+  <!-- 向上看的眼神 -->
+  <path d="M 93 71 L 96 72" stroke="#5D4037" stroke-width="0.5"/>
+</svg>`,
+
+// ---- 肢体障碍：青少年 ----
+physical_teen: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('pt_bg',[['0%','#E3F2FD'],['100%','#FFF3E0']])}
+  <rect width="200" height="200" rx="16" fill="url(#pt_bg_r)"/>
+  <!-- 公交站牌 -->
+  <rect x="150" y="30" width="4" height="70" fill="#78909C" opacity="0.3"/>
+  <rect x="142" y="30" width="20" height="24" rx="3" fill="#42A5F5" opacity="0.2"/>
+  <text x="152" y="46" font-size="8" fill="#1565C0" opacity="0.4" text-anchor="middle" font-weight="bold">BUS</text>
+  <!-- 地面 -->
+  <ellipse cx="95" cy="178" rx="65" ry="8" fill="#90A4AE" opacity="0.2"/>
+  <!-- 轮椅大轮 -->
+  <circle cx="68" cy="150" r="28" fill="none" stroke="#455A64" stroke-width="3"/>
+  <circle cx="68" cy="150" r="22" fill="none" stroke="#78909C" stroke-width="1"/>
+  <circle cx="68" cy="150" r="4" fill="#455A64"/>
+  <line x1="68" y1="128" x2="68" y2="172" stroke="#78909C" stroke-width="0.8"/>
+  <line x1="46" y1="150" x2="90" y2="150" stroke="#78909C" stroke-width="0.8"/>
+  <line x1="52" y1="134" x2="84" y2="166" stroke="#78909C" stroke-width="0.6"/>
+  <line x1="52" y1="166" x2="84" y2="134" stroke="#78909C" stroke-width="0.6"/>
+  <!-- 小轮 -->
+  <circle cx="122" cy="160" r="10" fill="none" stroke="#455A64" stroke-width="2"/>
+  <!-- 框架 -->
+  <path d="M 68 150 L 86 108 L 118 108 L 132 160" fill="none" stroke="#455A64" stroke-width="3.5" stroke-linejoin="round"/>
+  <line x1="80" y1="108" x2="118" y2="108" stroke="#455A64" stroke-width="3.5"/>
+  <rect x="80" y="108" width="40" height="6" rx="2" fill="#546E7A"/>
+  <!-- 身体 -->
+  <path d="M 86 112 Q 84 90 102 88 Q 120 90 118 112 L 118 126 L 86 126 Z" fill="#42A5F5"/>
+  <!-- 拉链 -->
+  <line x1="102" y1="90" x2="102" y2="124" stroke="#1565C0" stroke-width="1"/>
+  <!-- 头 -->
+  <circle cx="102" cy="66" r="21" fill="#FFCC80"/>
+  <!-- 头发 -->
+  <path d="M 82 64 Q 80 44 102 40 Q 124 44 122 64 L 120 56 Q 102 36 84 56 Z" fill="#3E2723"/>
+  <path d="M 119 52 Q 126 52 124 62" fill="none" stroke="#3E2723" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- 眼睛 -->
+  <circle cx="95" cy="66" r="2.5" fill="#3E2723"/>
+  <circle cx="109" cy="66" r="2.5" fill="#3E2723"/>
+  <!-- 嘴巴 -->
+  <path d="M 96 78 Q 102 82 108 78" fill="none" stroke="#3E2723" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- 耳机 -->
+  <path d="M 82 60 Q 80 52 84 50" fill="none" stroke="#5D4037" stroke-width="2"/>
+  <circle cx="81" cy="66" r="4" fill="#5D4037"/>
+  <!-- 手臂 -->
+  <path d="M 88 112 L 72 128" stroke="#FFCC80" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 116 112 L 132 126" stroke="#FFCC80" stroke-width="6" stroke-linecap="round"/>
+</svg>`,
+
+// ---- 肢体障碍：成年 ----
+physical_adult: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('pa_bg',[['0%','#F3E5F5'],['100%','#FFF3E0']])}
+  <rect width="200" height="200" rx="16" fill="url(#pa_bg_r)"/>
+  <!-- 城市天际线 -->
+  <rect x="135" y="40" width="30" height="65" rx="2" fill="#CE93D8" opacity="0.15"/>
+  <rect x="168" y="55" width="22" height="50" rx="2" fill="#CE93D8" opacity="0.15"/>
+  <rect x="140" y="48" width="6" height="8" fill="#FFF" opacity="0.3"/>
+  <rect x="152" y="48" width="6" height="8" fill="#FFF" opacity="0.3"/>
+  <rect x="140" y="62" width="6" height="8" fill="#FFF" opacity="0.3"/>
+  <rect x="152" y="62" width="6" height="8" fill="#FFF" opacity="0.3"/>
+  <!-- 地面 -->
+  <ellipse cx="95" cy="178" rx="65" ry="8" fill="#D7CCC8" opacity="0.3"/>
+  <!-- 轮椅大轮 -->
+  <circle cx="66" cy="148" r="29" fill="none" stroke="#37474F" stroke-width="3"/>
+  <circle cx="66" cy="148" r="23" fill="none" stroke="#546E7A" stroke-width="1"/>
+  <circle cx="66" cy="148" r="4" fill="#37474F"/>
+  <line x1="66" y1="125" x2="66" y2="171" stroke="#546E7A" stroke-width="0.8"/>
+  <line x1="43" y1="148" x2="89" y2="148" stroke="#546E7A" stroke-width="0.8"/>
+  <line x1="50" y1="131" x2="82" y2="165" stroke="#546E7A" stroke-width="0.6"/>
+  <line x1="50" y1="165" x2="82" y2="131" stroke="#546E7A" stroke-width="0.6"/>
+  <!-- 小轮 -->
+  <circle cx="124" cy="158" r="10" fill="none" stroke="#37474F" stroke-width="2"/>
+  <!-- 框架 -->
+  <path d="M 66 148 L 84 104 L 120 104 L 134 158" fill="none" stroke="#37474F" stroke-width="3.5" stroke-linejoin="round"/>
+  <line x1="78" y1="104" x2="120" y2="104" stroke="#37474F" stroke-width="3.5"/>
+  <rect x="78" y="104" width="42" height="7" rx="2" fill="#455A64"/>
+  <!-- 身体（西装） -->
+  <path d="M 84 108 Q 82 84 102 82 Q 122 84 120 108 L 120 124 L 84 124 Z" fill="#5D4037"/>
+  <!-- 衬衫领口 -->
+  <path d="M 96 84 L 102 92 L 108 84" fill="#FAFAFA"/>
+  <!-- 领带 -->
+  <path d="M 100 92 L 104 92 L 105 110 L 99 110 Z" fill="#E84A5F"/>
+  <!-- 头 -->
+  <circle cx="102" cy="60" r="22" fill="#FFCC80"/>
+  <!-- 头发 -->
+  <path d="M 82 58 Q 80 38 102 34 Q 124 38 122 58 L 120 50 Q 102 30 84 50 Z" fill="#3E2723"/>
+  <!-- 眼镜 -->
+  <circle cx="95" cy="60" r="5" fill="none" stroke="#5D4037" stroke-width="1.2"/>
+  <circle cx="109" cy="60" r="5" fill="none" stroke="#5D4037" stroke-width="1.2"/>
+  <line x1="100" y1="60" x2="104" y2="60" stroke="#5D4037" stroke-width="1.2"/>
+  <!-- 眼睛 -->
+  <circle cx="95" cy="60" r="2" fill="#3E2723"/>
+  <circle cx="109" cy="60" r="2" fill="#3E2723"/>
+  <!-- 嘴 -->
+  <path d="M 96 72 Q 102 76 108 72" fill="none" stroke="#3E2723" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- 手臂 -->
+  <path d="M 86 108 L 70 126" stroke="#FFCC80" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 118 108 L 134 124" stroke="#FFCC80" stroke-width="6" stroke-linecap="round"/>
+</svg>`,
+
+// ---- 视力障碍：儿童 ----
+visual_child: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('vc_bg',[['0%','#FFF8E1'],['100%','#FFE0B2']])}
+  <rect width="200" height="200" rx="16" fill="url(#vc_bg_r)"/>
+  <!-- 黑板 -->
+  <rect x="20" y="20" width="90" height="50" rx="3" fill="#2E7D32" opacity="0.15"/>
+  <text x="65" y="42" font-size="7" fill="#FFF" opacity="0.3" text-anchor="middle">语文课</text>
+  <text x="65" y="55" font-size="5" fill="#FFF" opacity="0.2" text-anchor="middle">春天来了...</text>
+  <!-- 地面 -->
+  <ellipse cx="120" cy="178" rx="55" ry="8" fill="#D7CCC8" opacity="0.3"/>
+  <!-- 课桌 -->
+  <rect x="95" y="130" width="70" height="8" rx="2" fill="#A1887F"/>
+  <rect x="100" y="138" width="4" height="30" fill="#8D6E63"/>
+  <rect x="156" y="138" width="4" height="30" fill="#8D6E63"/>
+  <!-- 书本 -->
+  <rect x="105" y="122" width="28" height="10" rx="1" fill="#FAFAFA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <line x1="119" y1="122" x2="119" y2="132" stroke="#E0E0E0" stroke-width="0.5"/>
+  <!-- 身体 -->
+  <path d="M 110 128 Q 108 105 126 103 Q 144 105 142 128 L 142 134 L 110 134 Z" fill="#EF5350"/>
+  <!-- 头 -->
+  <circle cx="126" cy="80" r="22" fill="#FFCC80"/>
+  <!-- 头发 -->
+  <path d="M 106 78 Q 104 58 126 54 Q 148 58 146 78 L 144 70 Q 126 50 108 70 Z" fill="#4E342E"/>
+  <path d="M 106 74 Q 103 84 106 88" fill="none" stroke="#4E342E" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- 厚眼镜 -->
+  <circle cx="119" cy="80" r="7" fill="#E3F2FD" opacity="0.6" stroke="#5D4037" stroke-width="1.5"/>
+  <circle cx="133" cy="80" r="7" fill="#E3F2FD" opacity="0.6" stroke="#5D4037" stroke-width="1.5"/>
+  <line x1="126" y1="80" x2="126" y2="80" stroke="#5D4037" stroke-width="1.5"/>
+  <path d="M 112 78 L 106 76" stroke="#5D4037" stroke-width="1.2"/>
+  <!-- 眯眼 -->
+  <path d="M 116 79 Q 119 77 122 79" fill="none" stroke="#3E2723" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M 130 79 Q 133 77 136 79" fill="none" stroke="#3E2723" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- 嘴 -->
+  <path d="M 121 92 Q 126 95 131 92" fill="none" stroke="#5D4037" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- 手臂拿书 -->
+  <path d="M 112 128 L 108 120" stroke="#FFCC80" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 140 128 L 144 120" stroke="#FFCC80" stroke-width="6" stroke-linecap="round"/>
+</svg>`,
+
+// ---- 视力障碍：青少年 ----
+visual_teen: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('vt_bg',[['0%','#E3F2FD'],['100%','#FFF3E0']])}
+  <rect width="200" height="200" rx="16" fill="url(#vt_bg_r)"/>
+  <!-- 红绿灯 -->
+  <rect x="155" y="20" width="16" height="40" rx="4" fill="#37474F" opacity="0.2"/>
+  <circle cx="163" cy="30" fill="#EF5350" opacity="0.3" r="4"/>
+  <circle cx="163" cy="42" fill="#F9A825" opacity="0.3" r="4"/>
+  <circle cx="163" cy="54" fill="#66BB6A" opacity="0.4" r="4"/>
+  <rect x="160" y="60" width="6" height="40" fill="#37474F" opacity="0.2"/>
+  <!-- 斑马线 -->
+  <rect x="20" y="160" width="40" height="5" fill="#FAFAFA" opacity="0.4"/>
+  <rect x="70" y="160" width="40" height="5" fill="#FAFAFA" opacity="0.4"/>
+  <rect x="120" y="160" width="40" height="5" fill="#FAFAFA" opacity="0.4"/>
+  <!-- 地面 -->
+  <ellipse cx="100" cy="178" rx="60" ry="8" fill="#90A4AE" opacity="0.15"/>
+  <!-- 身体 -->
+  <path d="M 88 130 Q 86 100 104 98 Q 122 100 120 130 L 120 145 L 88 145 Z" fill="#66BB6A"/>
+  <!-- 书包带 -->
+  <line x1="95" y1="100" x2="95" y2="130" stroke="#2E7D32" stroke-width="2"/>
+  <line x1="113" y1="100" x2="113" y2="130" stroke="#2E7D32" stroke-width="2"/>
+  <!-- 头 -->
+  <circle cx="104" cy="74" r="22" fill="#FFCC80"/>
+  <!-- 头发 -->
+  <path d="M 84 72 Q 82 50 104 46 Q 126 50 124 72 L 122 64 Q 104 42 86 64 Z" fill="#3E2723"/>
+  <!-- 墨镜 -->
+  <rect x="93" y="70" width="9" height="7" rx="2" fill="#263238" stroke="#5D4037" stroke-width="1"/>
+  <rect x="106" y="70" width="9" height="7" rx="2" fill="#263238" stroke="#5D4037" stroke-width="1"/>
+  <line x1="102" y1="73" x2="106" y2="73" stroke="#5D4037" stroke-width="1"/>
+  <!-- 嘴 -->
+  <path d="M 99 86 Q 104 89 109 86" fill="none" stroke="#3E2723" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- 白手杖 -->
+  <line x1="128" y1="130" x2="160" y2="175" stroke="#FAFAFA" stroke-width="3" stroke-linecap="round"/>
+  <line x1="128" y1="130" x2="160" y2="175" stroke="#E0E0E0" stroke-width="1"/>
+  <rect x="157" y="172" width="6" height="8" rx="2" fill="#EF5350" opacity="0.6"/>
+  <!-- 手臂 -->
+  <path d="M 90 130 L 128 132" stroke="#FFCC80" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 118 130 L 108 142" stroke="#FFCC80" stroke-width="6" stroke-linecap="round"/>
+  <!-- 腿 -->
+  <rect x="92" y="143" width="8" height="22" rx="3" fill="#37474F"/>
+  <rect x="108" y="143" width="8" height="22" rx="3" fill="#37474F"/>
+</svg>`,
+
+// ---- 视力障碍：成年 ----
+visual_adult: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('va_bg',[['0%','#E8EAF6'],['100%','#FFF3E0']])}
+  <rect width="200" height="200" rx="16" fill="url(#va_bg_r)"/>
+  <!-- 办公楼 -->
+  <rect x="140" y="25" width="50" height="80" rx="2" fill="#7986CB" opacity="0.12"/>
+  <rect x="145" y="32" width="8" height="10" fill="#FFF" opacity="0.2"/>
+  <rect x="158" y="32" width="8" height="10" fill="#FFF" opacity="0.2"/>
+  <rect x="171" y="32" width="8" height="10" fill="#FFF" opacity="0.2"/>
+  <rect x="145" y="48" width="8" height="10" fill="#FFF" opacity="0.2"/>
+  <rect x="158" y="48" width="8" height="10" fill="#FFF" opacity="0.2"/>
+  <rect x="171" y="48" width="8" height="10" fill="#FFF" opacity="0.2"/>
+  <!-- 地面 -->
+  <ellipse cx="95" cy="178" rx="60" ry="8" fill="#D7CCC8" opacity="0.3"/>
+  <!-- 身体 -->
+  <path d="M 84 128 Q 82 95 102 93 Q 122 95 120 128 L 120 148 L 84 148 Z" fill="#3949AB"/>
+  <!-- 衬衫领 -->
+  <path d="M 96 95 L 102 103 L 108 95" fill="#FAFAFA"/>
+  <!-- 头 -->
+  <circle cx="102" cy="68" r="23" fill="#FFCC80"/>
+  <!-- 头发 -->
+  <path d="M 81 66 Q 79 44 102 40 Q 125 44 123 66 L 121 58 Q 102 36 83 58 Z" fill="#3E2723"/>
+  <!-- 墨镜 -->
+  <rect x="89" y="64" width="10" height="8" rx="2" fill="#1A237E" stroke="#3E2723" stroke-width="1"/>
+  <rect x="105" y="64" width="10" height="8" rx="2" fill="#1A237E" stroke="#3E2723" stroke-width="1"/>
+  <line x1="99" y1="68" x2="105" y2="68" stroke="#3E2723" stroke-width="1.2"/>
+  <path d="M 89 66 L 84 64" stroke="#3E2723" stroke-width="1"/>
+  <path d="M 115 66 L 120 64" stroke="#3E2723" stroke-width="1"/>
+  <!-- 嘴 -->
+  <path d="M 96 82 Q 102 86 108 82" fill="none" stroke="#3E2723" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- 手机 -->
+  <rect x="110" y="125" width="16" height="24" rx="3" fill="#263238"/>
+  <rect x="112" y="128" width="12" height="18" rx="1" fill="#64B5F6" opacity="0.3"/>
+  <text x="118" y="140" font-size="5" fill="#FFF" opacity="0.5" text-anchor="middle">Aa</text>
+  <!-- 白手杖 -->
+  <line x1="82" y1="128" x2="50" y2="170" stroke="#FAFAFA" stroke-width="3" stroke-linecap="round"/>
+  <rect x="47" y="167" width="6" height="8" rx="2" fill="#EF5350" opacity="0.6"/>
+  <!-- 手臂 -->
+  <path d="M 88 128 L 82 128" stroke="#FFCC80" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 116 128 L 112 128" stroke="#FFCC80" stroke-width="6" stroke-linecap="round"/>
+  <!-- 腿 -->
+  <rect x="90" y="146" width="9" height="24" rx="3" fill="#1A237E"/>
+  <rect x="105" y="146" width="9" height="24" rx="3" fill="#1A237E"/>
+</svg>`,
+
+// ---- 听力障碍：儿童 ----
+hearing_child: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('hc_bg',[['0%','#FFF8E1'],['100%','#FFE0B2']])}
+  <rect width="200" height="200" rx="16" fill="url(#hc_bg_r)"/>
+  <!-- 黑板 -->
+  <rect x="20" y="18" width="100" height="55" rx="3" fill="#1B5E20" opacity="0.12"/>
+  <text x="70" y="42" font-size="8" fill="#FFF" opacity="0.25" text-anchor="middle">认真听讲</text>
+  <text x="70" y="58" font-size="5" fill="#FFF" opacity="0.2" text-anchor="middle">同学们好~</text>
+  <!-- 地面 -->
+  <ellipse cx="115" cy="178" rx="55" ry="8" fill="#D7CCC8" opacity="0.3"/>
+  <!-- 课桌 -->
+  <rect x="85" y="132" width="70" height="8" rx="2" fill="#A1887F"/>
+  <rect x="90" y="140" width="4" height="30" fill="#8D6E63"/>
+  <rect x="146" y="140" width="4" height="30" fill="#8D6E63"/>
+  <!-- 身体 -->
+  <path d="M 102 130 Q 100 108 118 106 Q 136 108 134 130 L 134 136 L 102 136 Z" fill="#FF7043"/>
+  <!-- 头 -->
+  <circle cx="118" cy="82" r="21" fill="#FFCC80"/>
+  <!-- 头发（女孩双马尾） -->
+  <path d="M 99 80 Q 97 60 118 56 Q 139 60 137 80 L 135 72 Q 118 52 100 72 Z" fill="#5D4037"/>
+  <ellipse cx="96" cy="82" rx="6" ry="12" fill="#5D4037"/>
+  <ellipse cx="140" cy="82" rx="6" ry="12" fill="#5D4037"/>
+  <!-- 眼睛 -->
+  <circle cx="112" cy="82" r="2.5" fill="#3E2723"/>
+  <circle cx="124" cy="82" r="2.5" fill="#3E2723"/>
+  <circle cx="112.5" cy="81" r="0.8" fill="#FFF"/>
+  <circle cx="124.5" cy="81" r="0.8" fill="#FFF"/>
+  <!-- 助听器 -->
+  <ellipse cx="139" cy="82" rx="4" ry="5" fill="#FFCA28" stroke="#F57F17" stroke-width="1"/>
+  <circle cx="139" cy="82" r="2" fill="#F57F17" opacity="0.5"/>
+  <!-- 手摸耳朵 -->
+  <path d="M 134 90 Q 142 88 139 80" fill="none" stroke="#FFCC80" stroke-width="5" stroke-linecap="round"/>
+  <!-- 嘴 -->
+  <path d="M 113 93 Q 118 96 123 93" fill="none" stroke="#5D4037" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- 腮红 -->
+  <circle cx="106" cy="88" r="3" fill="#FFAB91" opacity="0.5"/>
+  <circle cx="130" cy="88" r="3" fill="#FFAB91" opacity="0.5"/>
+  <!-- 疑问符号 -->
+  <text x="148" y="68" font-size="14" fill="#FF7043" opacity="0.4" font-weight="bold">?</text>
+  <!-- 手臂 -->
+  <path d="M 104 130 L 98 125" stroke="#FFCC80" stroke-width="6" stroke-linecap="round"/>
+</svg>`,
+
+// ---- 听力障碍：青少年 ----
+hearing_teen: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('ht_bg',[['0%','#E3F2FD'],['100%','#FFF3E0']])}
+  <rect width="200" height="200" rx="16" fill="url(#ht_bg_r)"/>
+  <!-- 道路 -->
+  <rect x="0" y="155" width="200" height="20" fill="#90A4AE" opacity="0.1"/>
+  <rect x="20" y="163" width="30" height="3" fill="#FFF" opacity="0.2"/>
+  <rect x="70" y="163" width="30" height="3" fill="#FFF" opacity="0.2"/>
+  <rect x="120" y="163" width="30" height="3" fill="#FFF" opacity="0.2"/>
+  <!-- 树 -->
+  <circle cx="30" cy="60" r="20" fill="#81C784" opacity="0.15"/>
+  <rect x="27" y="75" width="6" height="20" fill="#8D6E63" opacity="0.15"/>
+  <!-- 地面 -->
+  <ellipse cx="100" cy="175" rx="55" ry="8" fill="#90A4AE" opacity="0.15"/>
+  <!-- 身体 -->
+  <path d="M 86 130 Q 84 102 102 100 Q 120 102 118 130 L 118 148 L 86 148 Z" fill="#26C6DA"/>
+  <!-- 书包 -->
+  <rect x="116" y="108" width="16" height="22" rx="3" fill="#0097A7" opacity="0.6"/>
+  <line x1="96" y1="102" x2="96" y2="130" stroke="#006064" stroke-width="2"/>
+  <line x1="110" y1="102" x2="110" y2="130" stroke="#006064" stroke-width="2"/>
+  <!-- 头 -->
+  <circle cx="102" cy="76" r="21" fill="#FFCC80"/>
+  <!-- 头发 -->
+  <path d="M 82 74 Q 80 52 102 48 Q 124 52 122 74 L 120 66 Q 102 44 84 66 Z" fill="#4E342E"/>
+  <!-- 眼睛 -->
+  <circle cx="95" cy="76" r="2.5" fill="#3E2723"/>
+  <circle cx="109" cy="76" r="2.5" fill="#3E2723"/>
+  <!-- 助听器 -->
+  <ellipse cx="123" cy="76" rx="4" ry="5" fill="#FFCA28" stroke="#F57F17" stroke-width="1"/>
+  <circle cx="123" cy="76" r="2" fill="#F57F17" opacity="0.5"/>
+  <!-- 嘴 -->
+  <path d="M 97 88 Q 102 90 107 88" fill="none" stroke="#3E2723" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- 手臂 -->
+  <path d="M 88 130 L 76 146" stroke="#FFCC80" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 116 130 L 128 144" stroke="#FFCC80" stroke-width="6" stroke-linecap="round"/>
+  <!-- 腿 -->
+  <rect x="90" y="146" width="8" height="22" rx="3" fill="#006064"/>
+  <rect x="106" y="146" width="8" height="22" rx="3" fill="#006064"/>
+  <!-- 声波（后方来车） -->
+  <path d="M 145 70 Q 152 75 145 80" fill="none" stroke="#EF5350" stroke-width="1.5" opacity="0.3"/>
+  <path d="M 150 66 Q 160 75 150 84" fill="none" stroke="#EF5350" stroke-width="1.5" opacity="0.2"/>
+  <path d="M 155 62 Q 168 75 155 88" fill="none" stroke="#EF5350" stroke-width="1.5" opacity="0.15"/>
+</svg>`,
+
+// ---- 听力障碍：成年 ----
+hearing_adult: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('ha_bg',[['0%','#F3E5F5'],['100%','#FFF3E0']])}
+  <rect width="200" height="200" rx="16" fill="url(#ha_bg_r)"/>
+  <!-- 会议室背景 -->
+  <rect x="10" y="15" width="180" height="80" rx="4" fill="#E1BEE7" opacity="0.08"/>
+  <!-- 会议桌 -->
+  <ellipse cx="100" cy="100" rx="80" ry="20" fill="#CE93D8" opacity="0.08"/>
+  <!-- 同事剪影1 -->
+  <circle cx="35" cy="55" r="10" fill="#9E9E9E" opacity="0.15"/>
+  <rect x="25" y="65" width="20" height="25" rx="4" fill="#9E9E9E" opacity="0.15"/>
+  <!-- 同事剪影2 -->
+  <circle cx="165" cy="55" r="10" fill="#9E9E9E" opacity="0.15"/>
+  <rect x="155" y="65" width="20" height="25" rx="4" fill="#9E9E9E" opacity="0.15"/>
+  <!-- 对话气泡 -->
+  <ellipse cx="50" cy="45" rx="18" ry="10" fill="#FFF" opacity="0.15"/>
+  <text x="50" y="49" font-size="7" fill="#7B1FA2" opacity="0.2" text-anchor="middle">...</text>
+  <ellipse cx="155" cy="45" rx="18" ry="10" fill="#FFF" opacity="0.15"/>
+  <text x="155" y="49" font-size="7" fill="#7B1FA2" opacity="0.2" text-anchor="middle">...</text>
+  <!-- 地面 -->
+  <ellipse cx="100" cy="178" rx="55" ry="8" fill="#D7CCC8" opacity="0.3"/>
+  <!-- 身体 -->
+  <path d="M 84 130 Q 82 98 102 96 Q 122 98 120 130 L 120 148 L 84 148 Z" fill="#AB47BC"/>
+  <!-- 衬衫领 -->
+  <path d="M 96 98 L 102 106 L 108 98" fill="#FAFAFA"/>
+  <!-- 头 -->
+  <circle cx="102" cy="72" r="22" fill="#FFCC80"/>
+  <!-- 头发 -->
+  <path d="M 81 70 Q 79 48 102 44 Q 125 48 123 70 L 121 62 Q 102 40 83 62 Z" fill="#3E2723"/>
+  <!-- 眼睛 -->
+  <circle cx="95" cy="72" r="2.5" fill="#3E2723"/>
+  <circle cx="109" cy="72" r="2.5" fill="#3E2723"/>
+  <!-- 助听器 -->
+  <ellipse cx="124" cy="72" rx="4.5" ry="5.5" fill="#FFCA28" stroke="#F57F17" stroke-width="1"/>
+  <circle cx="124" cy="72" r="2.5" fill="#F57F17" opacity="0.5"/>
+  <!-- 嘴 -->
+  <path d="M 96 84 Q 102 87 108 84" fill="none" stroke="#3E2723" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- 手臂 -->
+  <path d="M 88 130 L 78 142" stroke="#FFCC80" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 116 130 L 126 142" stroke="#FFCC80" stroke-width="6" stroke-linecap="round"/>
+  <!-- 腿 -->
+  <rect x="90" y="146" width="9" height="24" rx="3" fill="#6A1B9A"/>
+  <rect x="105" y="146" width="9" height="24" rx="3" fill="#6A1B9A"/>
+  <!-- 注意力符号 -->
+  <text x="140" y="68" font-size="12" fill="#AB47BC" opacity="0.3">!</text>
+</svg>`,
+
+};
+
+// ============ 场景插画 ============
+const SCENE_ART = {
+
+// ---- 肢体障碍场景 ----
+physical: [
+// 场景1: 学校门口的台阶
+`<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('s_p1_bg',[['0%','#BBDEFB'],['50%','#FFE0B2'],['100%','#FFCC80']])}
+  <rect width="400" height="200" fill="url(#s_p1_bg)"/>
+  <!-- 太阳 -->
+  <circle cx="340" cy="35" r="18" fill="#FFD54F" opacity="0.6"/>
+  <!-- 学校建筑 -->
+  <rect x="180" y="40" width="160" height="100" rx="4" fill="#FFAB91" opacity="0.5"/>
+  <polygon points="180,40 260,10 340,40" fill="#FF7043" opacity="0.4"/>
+  <rect x="200" y="60" width="20" height="25" rx="2" fill="#FFF" opacity="0.5"/>
+  <rect x="240" y="60" width="20" height="25" rx="2" fill="#FFF" opacity="0.5"/>
+  <rect x="280" y="60" width="20" height="25" rx="2" fill="#FFF" opacity="0.5"/>
+  <rect x="240" y="95" width="30" height="45" rx="2" fill="#D84315" opacity="0.3"/>
+  <text x="260" y="32" font-size="10" fill="#BF360C" opacity="0.5" text-anchor="middle" font-weight="bold">阳光小学</text>
+  <!-- 台阶（障碍） -->
+  <rect x="100" y="140" width="100" height="8" rx="1" fill="#A1887F"/>
+  <rect x="100" y="148" width="100" height="8" rx="1" fill="#BCAAA4"/>
+  <rect x="100" y="156" width="100" height="8" rx="1" fill="#A1887F"/>
+  <rect x="100" y="164" width="100" height="8" rx="1" fill="#BCAAA4"/>
+  <!-- 警示标记 -->
+  <polygon points="150,130 160,130 155,122" fill="#EF5350" opacity="0.5"/>
+  <text x="155" y="135" font-size="6" fill="#EF5350" opacity="0.5" text-anchor="middle" font-weight="bold">!</text>
+  <!-- 地面 -->
+  <rect y="172" width="400" height="28" fill="#D7CCC8" opacity="0.3"/>
+  <!-- 小轮椅剪影 -->
+  <circle cx="60" cy="160" r="10" fill="none" stroke="#5D4037" stroke-width="1.5" opacity="0.3"/>
+  <circle cx="60" cy="160" r="3" fill="#5D4037" opacity="0.3"/>
+  <circle cx="75" cy="165" r="4" fill="none" stroke="#5D4037" stroke-width="1" opacity="0.3"/>
+  <path d="M 60 160 L 68 140 L 78 140 L 82 165" fill="none" stroke="#5D4037" stroke-width="1.5" opacity="0.3"/>
+  <circle cx="70" cy="128" r="6" fill="#FFCC80" opacity="0.3"/>
+</svg>`,
+
+// 场景2: 公交车与站台的间隙
+`<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('s_p2_bg',[['0%','#E3F2FD'],['100%','#FFF3E0']])}
+  <rect width="400" height="200" fill="url(#s_p2_bg)"/>
+  <!-- 公交车 -->
+  <rect x="220" y="50" width="160" height="95" rx="8" fill="#42A5F5" opacity="0.5"/>
+  <rect x="230" y="60" width="30" height="25" rx="2" fill="#E3F2FD" opacity="0.6"/>
+  <rect x="270" y="60" width="30" height="25" rx="2" fill="#E3F2FD" opacity="0.6"/>
+  <rect x="310" y="60" width="30" height="25" rx="2" fill="#E3F2FD" opacity="0.6"/>
+  <rect x="350" y="60" width="25" height="25" rx="2" fill="#E3F2FD" opacity="0.6"/>
+  <circle cx="250" cy="150" r="14" fill="#37474F" opacity="0.5"/>
+  <circle cx="250" cy="150" r="6" fill="#90A4AE" opacity="0.5"/>
+  <circle cx="350" cy="150" r="14" fill="#37474F" opacity="0.5"/>
+  <circle cx="350" cy="150" r="6" fill="#90A4AE" opacity="0.5"/>
+  <text x="300" y="52" font-size="9" fill="#1565C0" opacity="0.5" text-anchor="middle" font-weight="bold">302路</text>
+  <!-- 公交门 -->
+  <rect x="200" y="70" width="22" height="75" rx="2" fill="#1A237E" opacity="0.3"/>
+  <!-- 站台 -->
+  <rect x="20" y="145" width="180" height="30" rx="2" fill="#B0BEC5" opacity="0.4"/>
+  <rect x="20" y="140" width="180" height="6" rx="2" fill="#FFD54F" opacity="0.5"/>
+  <!-- 间隙（障碍） -->
+  <rect x="200" y="145" width="22" height="30" fill="#5D4037" opacity="0.2"/>
+  <polygon points="205,160 218,160 211,150" fill="#EF5350" opacity="0.4"/>
+  <text x="211" y="175" font-size="7" fill="#EF5350" opacity="0.5" text-anchor="middle">间隙</text>
+  <!-- 地面 -->
+  <rect y="175" width="400" height="25" fill="#D7CCC8" opacity="0.2"/>
+</svg>`,
+
+// 场景3: 写字楼旋转门
+`<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('s_p3_bg',[['0%','#E8EAF6'],['100%','#FFF3E0']])}
+  <rect width="400" height="200" fill="url(#s_p3_bg)"/>
+  <!-- 写字楼 -->
+  <rect x="100" y="10" width="200" height="120" rx="3" fill="#7986CB" opacity="0.25"/>
+  <g opacity="0.2">
+    <rect x="115" y="22" width="14" height="16" fill="#FFF"/><rect x="140" y="22" width="14" height="16" fill="#FFF"/>
+    <rect x="165" y="22" width="14" height="16" fill="#FFF"/><rect x="190" y="22" width="14" height="16" fill="#FFF"/>
+    <rect x="215" y="22" width="14" height="16" fill="#FFF"/><rect x="240" y="22" width="14" height="16" fill="#FFF"/>
+    <rect x="265" y="22" width="14" height="16" fill="#FFF"/>
+    <rect x="115" y="48" width="14" height="16" fill="#FFF"/><rect x="140" y="48" width="14" height="16" fill="#FFF"/>
+    <rect x="165" y="48" width="14" height="16" fill="#FFF"/><rect x="190" y="48" width="14" height="16" fill="#FFF"/>
+    <rect x="215" y="48" width="14" height="16" fill="#FFF"/><rect x="240" y="48" width="14" height="16" fill="#FFF"/>
+    <rect x="265" y="48" width="14" height="16" fill="#FFF"/>
+    <rect x="115" y="74" width="14" height="16" fill="#FFF"/><rect x="140" y="74" width="14" height="16" fill="#FFF"/>
+    <rect x="165" y="74" width="14" height="16" fill="#FFF"/><rect x="190" y="74" width="14" height="16" fill="#FFF"/>
+    <rect x="215" y="74" width="14" height="16" fill="#FFF"/><rect x="240" y="74" width="14" height="16" fill="#FFF"/>
+    <rect x="265" y="74" width="14" height="16" fill="#FFF"/>
+  </g>
+  <text x="200" y="105" font-size="9" fill="#283593" opacity="0.3" text-anchor="middle" font-weight="bold">商务中心</text>
+  <!-- 旋转门 -->
+  <circle cx="200" cy="145" r="30" fill="none" stroke="#3949AB" stroke-width="2" opacity="0.4"/>
+  <line x1="170" y1="145" x2="230" y2="145" stroke="#3949AB" stroke-width="1.5" opacity="0.4"/>
+  <line x1="200" y1="115" x2="200" y2="175" stroke="#3949AB" stroke-width="1.5" opacity="0.4"/>
+  <path d="M 170 145 A 30 30 0 0 1 200 115" fill="none" stroke="#3949AB" stroke-width="3" opacity="0.5"/>
+  <!-- 禁止标记 -->
+  <circle cx="200" cy="145" r="14" fill="none" stroke="#EF5350" stroke-width="1.5" opacity="0.3"/>
+  <line x1="190" y1="135" x2="210" y2="155" stroke="#EF5350" stroke-width="1.5" opacity="0.3"/>
+  <!-- 地面 -->
+  <rect y="175" width="400" height="25" fill="#D7CCC8" opacity="0.2"/>
+</svg>`,
+
+// 场景4: 医院挂号窗口过高
+`<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('s_p4_bg',[['0%','#E8F5E9'],['100%','#FFF3E0']])}
+  <rect width="400" height="200" fill="url(#s_p4_bg)"/>
+  <!-- 医院 -->
+  <rect x="50" y="20" width="300" height="140" rx="4" fill="#81C784" opacity="0.2"/>
+  <rect x="180" y="10" width="40" height="20" rx="2" fill="#FFF" opacity="0.3"/>
+  <text x="200" y="25" font-size="12" fill="#E53935" opacity="0.4" text-anchor="middle" font-weight="bold">+</text>
+  <text x="200" y="50" font-size="10" fill="#2E7D32" opacity="0.3" text-anchor="middle" font-weight="bold">医院</text>
+  <!-- 挂号窗口 -->
+  <rect x="120" y="60" width="160" height="100" rx="2" fill="#A5D6A7" opacity="0.25"/>
+  <rect x="140" y="70" width="120" height="20" rx="2" fill="#FFF" opacity="0.4"/>
+  <text x="200" y="84" font-size="8" fill="#2E7D32" opacity="0.4" text-anchor="middle">挂号处</text>
+  <!-- 窗口（过高） -->
+  <rect x="160" y="65" width="80" height="15" rx="2" fill="#37474F" opacity="0.4"/>
+  <line x1="165" y1="72" x2="235" y2="72" stroke="#90A4AE" stroke-width="0.5"/>
+  <!-- 向下箭头（太高） -->
+  <line x1="200" y1="85" x2="200" y2="105" stroke="#EF5350" stroke-width="2" opacity="0.4"/>
+  <polygon points="195,100 205,100 200,108" fill="#EF5350" opacity="0.4"/>
+  <text x="215" y="100" font-size="7" fill="#EF5350" opacity="0.4">太高</text>
+  <!-- 地面 -->
+  <rect y="160" width="400" height="40" fill="#D7CCC8" opacity="0.2"/>
+  <!-- 轮椅剪影 -->
+  <circle cx="90" cy="150" r="12" fill="none" stroke="#5D4037" stroke-width="1.5" opacity="0.25"/>
+  <circle cx="90" cy="150" r="4" fill="#5D4037" opacity="0.25"/>
+  <circle cx="108" cy="155" r="5" fill="none" stroke="#5D4037" stroke-width="1" opacity="0.25"/>
+  <path d="M 90 150 L 98 125 L 110 125 L 116 155" fill="none" stroke="#5D4037" stroke-width="1.5" opacity="0.25"/>
+  <circle cx="102" cy="115" r="8" fill="#FFCC80" opacity="0.25"/>
+</svg>`,
+
+// 场景5: 餐厅门口台阶
+`<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('s_p5_bg',[['0%','#FFF3E0'],['100%','#FFCC80']])}
+  <rect width="400" height="200" fill="url(#s_p5_bg)"/>
+  <!-- 餐厅 -->
+  <rect x="120" y="40" width="200" height="100" rx="4" fill="#FFAB91" opacity="0.35"/>
+  <polygon points="120,40 220,15 320,40" fill="#FF7043" opacity="0.3"/>
+  <text x="220" y="35" font-size="11" fill="#BF360C" opacity="0.4" text-anchor="middle" font-weight="bold">老地方餐厅</text>
+  <!-- 门 -->
+  <rect x="195" y="80" width="50" height="60" rx="2" fill="#D84315" opacity="0.3"/>
+  <circle cx="235" cy="110" r="2" fill="#FFD54F" opacity="0.5"/>
+  <!-- 窗户 -->
+  <rect x="135" y="55" width="40" height="30" rx="2" fill="#FFF" opacity="0.3"/>
+  <rect x="265" y="55" width="40" height="30" rx="2" fill="#FFF" opacity="0.3"/>
+  <!-- 台阶 -->
+  <rect x="180" y="140" width="80" height="6" rx="1" fill="#A1887F"/>
+  <rect x="180" y="146" width="80" height="6" rx="1" fill="#BCAAA4"/>
+  <rect x="180" y="152" width="80" height="6" rx="1" fill="#A1887F"/>
+  <rect x="180" y="158" width="80" height="6" rx="1" fill="#BCAAA4"/>
+  <!-- 警示 -->
+  <polygon points="220,135 230,135 225,128" fill="#EF5350" opacity="0.4"/>
+  <!-- 地面 -->
+  <rect y="164" width="400" height="36" fill="#D7CCC8" opacity="0.2"/>
+  <!-- 轮椅剪影 -->
+  <circle cx="70" cy="150" r="12" fill="none" stroke="#5D4037" stroke-width="1.5" opacity="0.25"/>
+  <circle cx="70" cy="150" r="4" fill="#5D4037" opacity="0.25"/>
+  <circle cx="88" cy="155" r="5" fill="none" stroke="#5D4037" stroke-width="1" opacity="0.25"/>
+  <path d="M 70 150 L 78 125 L 90 125 L 96 155" fill="none" stroke="#5D4037" stroke-width="1.5" opacity="0.25"/>
+  <circle cx="82" cy="115" r="8" fill="#FFCC80" opacity="0.25"/>
+</svg>`,
+
+// 场景6: 超市只有扶梯
+`<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('s_p6_bg',[['0%','#E3F2FD'],['100%','#FFF3E0']])}
+  <rect width="400" height="200" fill="url(#s_p6_bg)"/>
+  <!-- 超市 -->
+  <rect x="50" y="15" width="300" height="50" rx="4" fill="#64B5F6" opacity="0.2"/>
+  <text x="200" y="45" font-size="11" fill="#1565C0" opacity="0.35" text-anchor="middle" font-weight="bold">惠民超市</text>
+  <!-- 扶梯 -->
+  <polygon points="120,160 280,160 280,90 250,90 250,70 150,70 150,90 120,90" fill="#90A4AE" opacity="0.2"/>
+  <g opacity="0.3">
+    <rect x="130" y="100" width="130" height="4" rx="1" fill="#546E7A"/>
+    <rect x="135" y="110" width="125" height="4" rx="1" fill="#546E7A"/>
+    <rect x="140" y="120" width="120" height="4" rx="1" fill="#546E7A"/>
+    <rect x="145" y="130" width="115" height="4" rx="1" fill="#546E7A"/>
+    <rect x="150" y="140" width="110" height="4" rx="1" fill="#546E7A"/>
+    <rect x="155" y="150" width="105" height="4" rx="1" fill="#546E7A"/>
+  </g>
+  <!-- 扶手 -->
+  <line x1="125" y1="95" x2="275" y2="95" stroke="#37474F" stroke-width="2" opacity="0.3"/>
+  <line x1="125" y1="95" x2="125" y2="160" stroke="#37474F" stroke-width="2" opacity="0.3"/>
+  <line x1="275" y1="95" x2="275" y2="160" stroke="#37474F" stroke-width="2" opacity="0.3"/>
+  <!-- 方向箭头 -->
+  <polygon points="200,75 210,85 190,85" fill="#42A5F5" opacity="0.4"/>
+  <!-- 无直梯标记 -->
+  <rect x="300" y="100" width="50" height="50" rx="4" fill="none" stroke="#EF5350" stroke-width="1.5" opacity="0.3"/>
+  <text x="325" y="120" font-size="9" fill="#EF5350" opacity="0.4" text-anchor="middle" font-weight="bold">直梯</text>
+  <line x1="308" y1="108" x2="342" y2="142" stroke="#EF5350" stroke-width="2" opacity="0.4"/>
+  <!-- 地面 -->
+  <rect y="160" width="400" height="40" fill="#D7CCC8" opacity="0.2"/>
+</svg>`,
+],
+
+// ---- 视力障碍场景 ----
+visual: [
+// 场景1: 教室黑板字太小
+`<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('s_v1_bg',[['0%','#FFF8E1'],['100%','#FFE0B2']])}
+  <rect width="400" height="200" fill="url(#s_v1_bg)"/>
+  <!-- 黑板 -->
+  <rect x="30" y="20" width="340" height="100" rx="4" fill="#1B5E20" opacity="0.8"/>
+  <rect x="35" y="25" width="330" height="90" rx="2" fill="#2E7D32" opacity="0.8"/>
+  <!-- 小字 -->
+  <g fill="#FAFAFA" opacity="0.7">
+    <text x="60" y="50" font-size="6">春眠不觉晓</text>
+    <text x="60" y="62" font-size="6">处处闻啼鸟</text>
+    <text x="60" y="74" font-size="6">夜来风雨声</text>
+    <text x="60" y="86" font-size="6">花落知多少</text>
+  </g>
+  <!-- 放大镜效果 -->
+  <circle cx="160" cy="65" r="25" fill="none" stroke="#FFD54F" stroke-width="2" opacity="0.5"/>
+  <circle cx="160" cy="65" r="24" fill="#FFF" opacity="0.08"/>
+  <text x="160" y="62" font-size="9" fill="#FAFAFA" opacity="0.8" text-anchor="middle">春眠</text>
+  <text x="160" y="74" font-size="9" fill="#FAFAFA" opacity="0.8" text-anchor="middle">不觉晓</text>
+  <line x1="180" y1="80" x2="195" y2="95" stroke="#FFD54F" stroke-width="2" opacity="0.4"/>
+  <!-- 模糊区域 -->
+  <rect x="250" y="35" width="100" height="70" fill="#81C784" opacity="0.15"/>
+  <text x="300" y="75" font-size="20" fill="#FAFAFA" opacity="0.08" text-anchor="middle">???</text>
+  <!-- 课桌 -->
+  <rect y="140" width="400" height="10" fill="#A1887F" opacity="0.3"/>
+  <rect y="150" width="400" height="50" fill="#D7CCC8" opacity="0.2"/>
+  <!-- 小人剪影 -->
+  <circle cx="80" cy="135" r="8" fill="#FFCC80" opacity="0.3"/>
+  <rect x="73" y="142" width="14" height="20" rx="3" fill="#EF5350" opacity="0.3"/>
+  <circle cx="73" cy="132" r="5" fill="none" stroke="#5D4037" stroke-width="1" opacity="0.3"/>
+  <circle cx="87" cy="132" r="5" fill="none" stroke="#5D4037" stroke-width="1" opacity="0.3"/>
+</svg>`,
+
+// 场景2: 没有提示音的红绿灯
+`<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('s_v2_bg',[['0%','#E3F2FD'],['100%','#FFF3E0']])}
+  <rect width="400" height="200" fill="url(#s_v2_bg)"/>
+  <!-- 天空云 -->
+  <ellipse cx="80" cy="30" rx="30" ry="12" fill="#FFF" opacity="0.3"/>
+  <ellipse cx="300" cy="25" rx="35" ry="10" fill="#FFF" opacity="0.3"/>
+  <!-- 红绿灯 -->
+  <rect x="170" y="20" width="30" height="70" rx="6" fill="#263238" opacity="0.6"/>
+  <circle cx="185" cy="35" r="8" fill="#EF5350" opacity="0.7"/>
+  <circle cx="185" cy="55" r="8" fill="#FFD54F" opacity="0.4"/>
+  <circle cx="185" cy="75" r="8" fill="#66BB6A" opacity="0.3"/>
+  <rect x="182" y="90" width="6" height="50" fill="#37474F" opacity="0.4"/>
+  <!-- 静音标记 -->
+  <circle cx="220" cy="50" r="12" fill="#EF5350" opacity="0.2"/>
+  <path d="M 214 50 L 218 46 L 218 54 Z M 222 46 L 228 54 M 228 46 L 222 54" stroke="#EF5350" stroke-width="1.5" opacity="0.4" fill="none"/>
+  <text x="220" y="75" font-size="7" fill="#EF5350" opacity="0.4" text-anchor="middle">无声</text>
+  <!-- 斑马线 -->
+  <rect x="20" y="155" width="50" height="8" fill="#FAFAFA" opacity="0.5"/>
+  <rect x="80" y="155" width="50" height="8" fill="#FAFAFA" opacity="0.5"/>
+  <rect x="140" y="155" width="50" height="8" fill="#FAFAFA" opacity="0.5"/>
+  <rect x="200" y="155" width="50" height="8" fill="#FAFAFA" opacity="0.5"/>
+  <rect x="260" y="155" width="50" height="8" fill="#FAFAFA" opacity="0.5"/>
+  <rect x="320" y="155" width="50" height="8" fill="#FAFAFA" opacity="0.5"/>
+  <!-- 地面 -->
+  <rect y="163" width="400" height="37" fill="#90A4AE" opacity="0.15"/>
+  <!-- 行人剪影 -->
+  <circle cx="60" cy="145" r="8" fill="#FFCC80" opacity="0.3"/>
+  <rect x="53" y="152" width="14" height="20" rx="3" fill="#66BB6A" opacity="0.3"/>
+  <line x1="67" y1="155" x2="80" y2="165" stroke="#FAFAFA" stroke-width="2" opacity="0.3" stroke-linecap="round"/>
+  <rect x="52" y="170" width="5" height="15" rx="2" fill="#37474F" opacity="0.2"/>
+  <rect x="62" y="170" width="5" height="15" rx="2" fill="#37474F" opacity="0.2"/>
+</svg>`,
+
+// 场景3: 面试表格只有纸质
+`<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('s_v3_bg',[['0%','#E8EAF6'],['100%','#FFF3E0']])}
+  <rect width="400" height="200" fill="url(#s_v3_bg)"/>
+  <!-- 办公桌 -->
+  <rect x="50" y="100" width="300" height="8" rx="2" fill="#8D6E63" opacity="0.4"/>
+  <rect x="60" y="108" width="6" height="60" fill="#5D4037" opacity="0.3"/>
+  <rect x="334" y="108" width="6" height="60" fill="#5D4037" opacity="0.3"/>
+  <!-- 纸质表格 -->
+  <rect x="100" y="60" width="120" height="80" rx="2" fill="#FAFAFA" opacity="0.6" stroke="#E0E0E0" stroke-width="1"/>
+  <g opacity="0.3">
+    <line x1="110" y1="75" x2="210" y2="75" stroke="#9E9E9E" stroke-width="0.5"/>
+    <line x1="110" y1="85" x2="210" y2="85" stroke="#9E9E9E" stroke-width="0.5"/>
+    <line x1="110" y1="95" x2="210" y2="95" stroke="#9E9E9E" stroke-width="0.5"/>
+    <line x1="110" y1="105" x2="210" y2="105" stroke="#9E9E9E" stroke-width="0.5"/>
+    <line x1="110" y1="115" x2="210" y2="115" stroke="#9E9E9E" stroke-width="0.5"/>
+    <line x1="110" y1="125" x2="210" y2="125" stroke="#9E9E9E" stroke-width="0.5"/>
+    <text x="115" y="73" font-size="4" fill="#424242">姓名:__________</text>
+    <text x="115" y="83" font-size="4" fill="#424242">学历:__________</text>
+    <text x="115" y="93" font-size="4" fill="#424242">经验:__________</text>
+  </g>
+  <text x="160" y="55" font-size="7" fill="#5D4037" opacity="0.3" text-anchor="middle">求职申请表</text>
+  <!-- 放大镜 -->
+  <circle cx="170" cy="100" r="18" fill="none" stroke="#FFD54F" stroke-width="2" opacity="0.4"/>
+  <circle cx="170" cy="100" r="17" fill="#FFF" opacity="0.1"/>
+  <line x1="183" y1="113" x2="195" y2="125" stroke="#FFD54F" stroke-width="2" opacity="0.4"/>
+  <!-- 小字警告 -->
+  <text x="240" y="90" font-size="7" fill="#EF5350" opacity="0.3">字太小</text>
+  <text x="240" y="100" font-size="7" fill="#EF5350" opacity="0.3">看不清</text>
+  <!-- 椅子 -->
+  <rect x="140" y="150" width="40" height="4" rx="1" fill="#5D4037" opacity="0.3"/>
+  <rect x="142" y="154" width="4" height="20" fill="#5D4037" opacity="0.3"/>
+  <rect x="174" y="154" width="4" height="20" fill="#5D4037" opacity="0.3"/>
+  <!-- 地面 -->
+  <rect y="170" width="400" height="30" fill="#D7CCC8" opacity="0.2"/>
+</svg>`,
+
+// 场景4: 医院无盲道
+`<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('s_v4_bg',[['0%','#E8F5E9'],['100%','#FFF3E0']])}
+  <rect width="400" height="200" fill="url(#s_v4_bg)"/>
+  <!-- 医院大厅 -->
+  <rect x="30" y="15" width="340" height="120" rx="4" fill="#81C784" opacity="0.15"/>
+  <text x="200" y="40" font-size="11" fill="#2E7D32" opacity="0.3" text-anchor="middle" font-weight="bold">门诊大厅</text>
+  <!-- 指示牌 -->
+  <rect x="100" y="50" width="80" height="30" rx="2" fill="#FFF" opacity="0.3"/>
+  <text x="140" y="65" font-size="6" fill="#2E7D32" opacity="0.4" text-anchor="middle">内科 →</text>
+  <text x="140" y="74" font-size="6" fill="#2E7D32" opacity="0.4" text-anchor="middle">外科 ←</text>
+  <rect x="220" y="50" width="80" height="30" rx="2" fill="#FFF" opacity="0.3"/>
+  <text x="260" y="65" font-size="6" fill="#2E7D32" opacity="0.4" text-anchor="middle">药房 →</text>
+  <text x="260" y="74" font-size="6" fill="#2E7D32" opacity="0.4" text-anchor="middle">化验 ←</text>
+  <!-- 地面（无盲道） -->
+  <rect y="135" width="400" height="65" fill="#D7CCC8" opacity="0.3"/>
+  <!-- 缺失盲道标记 -->
+  <rect x="150" y="145" width="100" height="20" fill="none" stroke="#EF5350" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.3"/>
+  <text x="200" y="159" font-size="7" fill="#EF5350" opacity="0.4" text-anchor="middle">无盲道</text>
+  <!-- 柱子 -->
+  <rect x="50" y="50" width="16" height="85" rx="2" fill="#A5D6A7" opacity="0.2"/>
+  <rect x="334" y="50" width="16" height="85" rx="2" fill="#A5D6A7" opacity="0.2"/>
+  <!-- 行人剪影 -->
+  <circle cx="100" cy="155" r="8" fill="#FFCC80" opacity="0.25"/>
+  <rect x="93" y="162" width="14" height="20" rx="3" fill="#3949AB" opacity="0.25"/>
+  <line x1="107" y1="165" x2="120" y2="175" stroke="#FAFAFA" stroke-width="2" opacity="0.25" stroke-linecap="round"/>
+  <!-- 疑问 -->
+  <text x="85" y="150" font-size="14" fill="#3949AB" opacity="0.2" font-weight="bold">?</text>
+</svg>`,
+
+// 场景5: 手机聊天字小
+`<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('s_v5_bg',[['0%','#F3E5F5'],['100%','#FFE0B2']])}
+  <rect width="400" height="200" fill="url(#s_v5_bg)"/>
+  <!-- 手机 -->
+  <rect x="130" y="25" width="140" height="150" rx="16" fill="#263238" opacity="0.5"/>
+  <rect x="138" y="40" width="124" height="120" rx="4" fill="#FAFAFA" opacity="0.7"/>
+  <!-- 聊天气泡 -->
+  <rect x="145" y="50" width="80" height="22" rx="8" fill="#64B5F6" opacity="0.4"/>
+  <text x="185" y="64" font-size="5" fill="#FFF" opacity="0.6" text-anchor="middle">明天下午3点开会</text>
+  <rect x="175" y="78" width="80" height="22" rx="8" fill="#E8F5E9" opacity="0.5"/>
+  <text x="215" y="92" font-size="5" fill="#2E7D32" opacity="0.5" text-anchor="middle">好的，在哪里？</text>
+  <rect x="145" y="106" width="80" height="22" rx="8" fill="#64B5F6" opacity="0.4"/>
+  <text x="185" y="120" font-size="5" fill="#FFF" opacity="0.6" text-anchor="middle">3楼会议室A</text>
+  <!-- 放大镜 -->
+  <circle cx="200" cy="90" r="30" fill="none" stroke="#FFD54F" stroke-width="2" opacity="0.3"/>
+  <circle cx="200" cy="90" r="29" fill="#FFF" opacity="0.08"/>
+  <!-- 字太小标记 -->
+  <text x="290" y="70" font-size="8" fill="#EF5350" opacity="0.3">字号</text>
+  <text x="290" y="82" font-size="8" fill="#EF5350" opacity="0.3">太小</text>
+  <!-- 设置图标 -->
+  <circle cx="300" cy="110" r="12" fill="none" stroke="#9C27B0" stroke-width="1.5" opacity="0.2"/>
+  <text x="300" y="115" font-size="8" fill="#9C27B0" opacity="0.25" text-anchor="middle">A+</text>
+  <!-- 手指 -->
+  <ellipse cx="230" cy="155" rx="8" ry="12" fill="#FFCC80" opacity="0.3"/>
+</svg>`,
+
+// 场景6: 超市标签字小
+`<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('s_v6_bg',[['0%','#E3F2FD'],['100%','#FFF3E0']])}
+  <rect width="400" height="200" fill="url(#s_v6_bg)"/>
+  <!-- 货架 -->
+  <rect x="20" y="20" width="360" height="150" rx="2" fill="#A1887F" opacity="0.2"/>
+  <line x1="20" y1="55" x2="380" y2="55" stroke="#8D6E63" stroke-width="2" opacity="0.3"/>
+  <line x1="20" y1="95" x2="380" y2="95" stroke="#8D6E63" stroke-width="2" opacity="0.3"/>
+  <line x1="20" y1="135" x2="380" y2="135" stroke="#8D6E63" stroke-width="2" opacity="0.3"/>
+  <!-- 商品 -->
+  <g opacity="0.35">
+    <rect x="35" y="30" width="22" height="22" rx="2" fill="#FF7043"/>
+    <rect x="70" y="30" width="22" height="22" rx="2" fill="#66BB6A"/>
+    <rect x="105" y="30" width="22" height="22" rx="2" fill="#42A5F5"/>
+    <rect x="140" y="30" width="22" height="22" rx="2" fill="#FFCA28"/>
+    <rect x="175" y="30" width="22" height="22" rx="2" fill="#AB47BC"/>
+    <rect x="210" y="30" width="22" height="22" rx="2" fill="#FF7043"/>
+    <rect x="245" y="30" width="22" height="22" rx="2" fill="#66BB6A"/>
+    <rect x="280" y="30" width="22" height="22" rx="2" fill="#42A5F5"/>
+    <rect x="315" y="30" width="22" height="22" rx="2" fill="#FFCA28"/>
+    <rect x="35" y="65" width="22" height="28" rx="2" fill="#26C6DA"/>
+    <rect x="70" y="65" width="22" height="28" rx="2" fill="#FF8A65"/>
+    <rect x="105" y="65" width="22" height="28" rx="2" fill="#9CCC65"/>
+    <rect x="140" y="65" width="22" height="28" rx="2" fill="#5C6BC0"/>
+    <rect x="175" y="65" width="22" height="28" rx="2" fill="#FFA726"/>
+    <rect x="210" y="65" width="22" height="28" rx="2" fill="#26C6DA"/>
+    <rect x="245" y="65" width="22" height="28" rx="2" fill="#FF8A65"/>
+    <rect x="280" y="65" width="22" height="28" rx="2" fill="#9CCC65"/>
+    <rect x="315" y="65" width="22" height="28" rx="2" fill="#5C6BC0"/>
+  </g>
+  <!-- 小标签 -->
+  <g opacity="0.3">
+    <rect x="35" y="54" width="22" height="8" fill="#FFF"/>
+    <text x="46" y="60" font-size="3" fill="#5D4037" text-anchor="middle">¥3.5</text>
+    <rect x="70" y="54" width="22" height="8" fill="#FFF"/>
+    <text x="81" y="60" font-size="3" fill="#5D4037" text-anchor="middle">¥5.0</text>
+    <rect x="105" y="54" width="22" height="8" fill="#FFF"/>
+    <text x="116" y="60" font-size="3" fill="#5D4037" text-anchor="middle">¥2.8</text>
+    <rect x="140" y="54" width="22" height="8" fill="#FFF"/>
+    <text x="151" y="60" font-size="3" fill="#5D4037" text-anchor="middle">¥8.9</text>
+  </g>
+  <!-- 放大镜 -->
+  <circle cx="120" cy="75" r="22" fill="none" stroke="#FFD54F" stroke-width="2" opacity="0.5"/>
+  <circle cx="120" cy="75" r="21" fill="#FFF" opacity="0.1"/>
+  <line x1="136" y1="91" x2="150" y2="105" stroke="#FFD54F" stroke-width="2" opacity="0.5"/>
+  <!-- 模糊区域 -->
+  <rect x="200" y="25" width="180" height="120" fill="#B0BEC5" opacity="0.12"/>
+  <text x="290" y="85" font-size="20" fill="#5D4037" opacity="0.06" text-anchor="middle">???</text>
+  <!-- 地面 -->
+  <rect y="170" width="400" height="30" fill="#D7CCC8" opacity="0.2"/>
+</svg>`,
+],
+
+// ---- 听力障碍场景 ----
+hearing: [
+// 场景1: 课堂老师讲话
+`<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('s_h1_bg',[['0%','#FFF8E1'],['100%','#FFE0B2']])}
+  <rect width="400" height="200" fill="url(#s_h1_bg)"/>
+  <!-- 黑板 -->
+  <rect x="20" y="15" width="200" height="70" rx="3" fill="#1B5E20" opacity="0.8"/>
+  <text x="120" y="50" font-size="8" fill="#FAFAFA" opacity="0.6" text-anchor="middle">同学们请看黑板</text>
+  <text x="120" y="65" font-size="8" fill="#FAFAFA" opacity="0.6" text-anchor="middle">a + b = c</text>
+  <!-- 老师剪影 -->
+  <circle cx="300" cy="60" r="14" fill="#FFCC80" opacity="0.35"/>
+  <path d="M 286 74 Q 284 100 300 102 Q 316 100 314 74 Z" fill="#42A5F5" opacity="0.35"/>
+  <!-- 老师嘴巴动 -->
+  <ellipse cx="300" cy="62" rx="3" ry="2" fill="#5D4037" opacity="0.35"/>
+  <!-- 声波 -->
+  <path d="M 280 55 Q 272 55 272 62 Q 272 68 280 68" fill="none" stroke="#FFD54F" stroke-width="1.5" opacity="0.3"/>
+  <path d="M 275 50 Q 263 52 263 62 Q 263 72 275 74" fill="none" stroke="#FFD54F" stroke-width="1.5" opacity="0.2"/>
+  <path d="M 270 45 Q 254 50 254 62 Q 254 74 270 79" fill="none" stroke="#FFD54F" stroke-width="1.5" opacity="0.15"/>
+  <!-- 讲台 -->
+  <rect x="270" y="100" width="60" height="8" rx="2" fill="#8D6E63" opacity="0.3"/>
+  <rect x="275" y="108" width="4" height="50" fill="#5D4037" opacity="0.3"/>
+  <rect x="321" y="108" width="4" height="50" fill="#5D4037" opacity="0.3"/>
+  <!-- 学生课桌 -->
+  <rect x="50" y="130" width="80" height="8" rx="2" fill="#A1887F" opacity="0.3"/>
+  <rect x="55" y="138" width="4" height="35" fill="#8D6E63" opacity="0.3"/>
+  <rect x="121" y="138" width="4" height="35" fill="#8D6E63" opacity="0.3"/>
+  <!-- 学生剪影 -->
+  <circle cx="80" cy="115" r="10" fill="#FFCC80" opacity="0.3"/>
+  <path d="M 70 125 Q 68 140 80 142 Q 92 140 90 125 Z" fill="#FF7043" opacity="0.3"/>
+  <!-- 助听器 -->
+  <ellipse cx="90" cy="115" rx="3" ry="4" fill="#FFCA28" opacity="0.4"/>
+  <!-- 问号 -->
+  <text x="80" y="110" font-size="14" fill="#FF7043" opacity="0.2" font-weight="bold">?</text>
+  <!-- 地面 -->
+  <rect y="170" width="400" height="30" fill="#D7CCC8" opacity="0.2"/>
+</svg>`,
+
+// 场景2: 路上来车无声
+`<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('s_h2_bg',[['0%','#E3F2FD'],['100%','#FFF3E0']])}
+  <rect width="400" height="200" fill="url(#s_h2_bg)"/>
+  <!-- 道路 -->
+  <rect y="130" width="400" height="70" fill="#37474F" opacity="0.15"/>
+  <rect x="0" y="160" width="40" height="3" fill="#FFF" opacity="0.3"/>
+  <rect x="60" y="160" width="40" height="3" fill="#FFF" opacity="0.3"/>
+  <rect x="120" y="160" width="40" height="3" fill="#FFF" opacity="0.3"/>
+  <rect x="180" y="160" width="40" height="3" fill="#FFF" opacity="0.3"/>
+  <rect x="240" y="160" width="40" height="3" fill="#FFF" opacity="0.3"/>
+  <rect x="300" y="160" width="40" height="3" fill="#FFF" opacity="0.3"/>
+  <!-- 电动车 -->
+  <rect x="250" y="130" width="50" height="22" rx="4" fill="#FF7043" opacity="0.4"/>
+  <circle cx="260" cy="155" r="8" fill="#37474F" opacity="0.4"/>
+  <circle cx="290" cy="155" r="8" fill="#37474F" opacity="0.4"/>
+  <rect x="270" y="118" width="12" height="14" rx="2" fill="#FFCC80" opacity="0.3"/>
+  <circle cx="276" cy="112" r="6" fill="#FFCC80" opacity="0.3"/>
+  <!-- 无声标记 -->
+  <circle cx="230" cy="115" r="14" fill="#EF5350" opacity="0.1"/>
+  <path d="M 224 115 L 228 111 L 228 119 Z M 232 111 L 238 119 M 238 111 L 232 119" stroke="#EF5350" stroke-width="1.5" opacity="0.4" fill="none"/>
+  <text x="230" y="138" font-size="7" fill="#EF5350" opacity="0.4" text-anchor="middle">无声来车</text>
+  <!-- 行人剪影 -->
+  <circle cx="100" cy="120" r="10" fill="#FFCC80" opacity="0.3"/>
+  <rect x="92" y="129" width="16" height="25" rx="3" fill="#26C6DA" opacity="0.3"/>
+  <ellipse cx="110" cy="120" rx="3" ry="4" fill="#FFCA28" opacity="0.4"/>
+  <!-- 腿 -->
+  <rect x="93" y="152" width="6" height="18" rx="2" fill="#006064" opacity="0.25"/>
+  <rect x="103" y="152" width="6" height="18" rx="2" fill="#006064" opacity="0.25"/>
+  <!-- 人行道 -->
+  <rect y="120" width="400" height="12" fill="#D7CCC8" opacity="0.2"/>
+</svg>`,
+
+// 场景3: 电话铃声
+`<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('s_h3_bg',[['0%','#F3E5F5'],['100%','#FFE0B2']])}
+  <rect width="400" height="200" fill="url(#s_h3_bg)"/>
+  <!-- 桌面 -->
+  <rect y="120" width="400" height="80" fill="#D7CCC8" opacity="0.2"/>
+  <rect y="115" width="400" height="8" fill="#A1887F" opacity="0.3"/>
+  <!-- 电话 -->
+  <rect x="150" y="70" width="100" height="50" rx="8" fill="#263238" opacity="0.4"/>
+  <rect x="160" y="78" width="80" height="34" rx="4" fill="#1A237E" opacity="0.3"/>
+  <!-- 来电显示 -->
+  <text x="200" y="95" font-size="7" fill="#64B5F6" opacity="0.5" text-anchor="middle">来电...</text>
+  <text x="200" y="105" font-size="6" fill="#64B5F6" opacity="0.4" text-anchor="middle">138xxxx</text>
+  <!-- 铃声波纹 -->
+  <path d="M 130 80 Q 120 80 120 95 Q 120 110 130 110" fill="none" stroke="#EF5350" stroke-width="2" opacity="0.3"/>
+  <path d="M 120 70 Q 105 75 105 95 Q 105 115 120 120" fill="none" stroke="#EF5350" stroke-width="2" opacity="0.2"/>
+  <path d="M 110 60 Q 90 70 90 95 Q 90 120 110 130" fill="none" stroke="#EF5350" stroke-width="2" opacity="0.1"/>
+  <path d="M 270 80 Q 280 80 280 95 Q 280 110 270 110" fill="none" stroke="#EF5350" stroke-width="2" opacity="0.3"/>
+  <path d="M 280 70 Q 295 75 295 95 Q 295 115 280 120" fill="none" stroke="#EF5350" stroke-width="2" opacity="0.2"/>
+  <!-- 听不到标记 -->
+  <circle cx="200" cy="50" r="18" fill="#EF5350" opacity="0.08"/>
+  <path d="M 188 50 L 196 42 L 196 58 Z M 200 42 Q 210 50 200 58 M 206 42 Q 216 50 206 58" stroke="#EF5350" stroke-width="1.5" opacity="0.3" fill="none"/>
+  <line x1="180" y1="35" x2="220" y2="65" stroke="#EF5350" stroke-width="1.5" opacity="0.3"/>
+  <text x="200" y="22" font-size="8" fill="#EF5350" opacity="0.4" text-anchor="middle" font-weight="bold">听不见铃声</text>
+  <!-- 人物剪影 -->
+  <circle cx="320" cy="100" r="10" fill="#FFCC80" opacity="0.3"/>
+  <rect x="312" y="109" width="16" height="20" rx="3" fill="#AB47BC" opacity="0.3"/>
+  <ellipse cx="330" cy="100" rx="3" ry="4" fill="#FFCA28" opacity="0.4"/>
+</svg>`,
+
+// 场景4: 医院叫号屏幕
+`<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('s_h4_bg',[['0%','#E8F5E9'],['100%','#FFE0B2']])}
+  <rect width="400" height="200" fill="url(#s_h4_bg)"/>
+  <!-- 墙面 -->
+  <rect x="0" y="0" width="400" height="140" fill="#A5D6A7" opacity="0.08"/>
+  <!-- 叫号屏 -->
+  <rect x="100" y="20" width="200" height="60" rx="4" fill="#1B5E20" opacity="0.6"/>
+  <text x="200" y="42" font-size="10" fill="#66BB6A" opacity="0.7" text-anchor="middle" font-weight="bold">叫号显示</text>
+  <text x="200" y="62" font-size="16" fill="#FFD54F" opacity="0.7" text-anchor="middle" font-weight="bold">A032</text>
+  <!-- 广播波纹 -->
+  <path d="M 90 40 Q 80 40 80 50 Q 80 60 90 60" fill="none" stroke="#66BB6A" stroke-width="1.5" opacity="0.2"/>
+  <path d="M 85 35 Q 70 40 70 50 Q 70 60 85 65" fill="none" stroke="#66BB6A" stroke-width="1.5" opacity="0.15"/>
+  <path d="M 310 40 Q 320 40 320 50 Q 320 60 310 60" fill="none" stroke="#66BB6A" stroke-width="1.5" opacity="0.2"/>
+  <path d="M 315 35 Q 330 40 330 50 Q 330 60 315 65" fill="none" stroke="#66BB6A" stroke-width="1.5" opacity="0.15"/>
+  <!-- 听不到标记 -->
+  <text x="200" y="100" font-size="8" fill="#EF5350" opacity="0.3" text-anchor="middle">广播叫号 · 听不清</text>
+  <!-- 排队座椅 -->
+  <g opacity="0.3">
+    <rect x="40" y="130" width="50" height="6" rx="2" fill="#5D4037"/>
+    <rect x="45" y="136" width="4" height="30" fill="#5D4037"/>
+    <rect x="81" y="136" width="4" height="30" fill="#5D4037"/>
+    <rect x="100" y="130" width="50" height="6" rx="2" fill="#5D4037"/>
+    <rect x="105" y="136" width="4" height="30" fill="#5D4037"/>
+    <rect x="141" y="136" width="4" height="30" fill="#5D4037"/>
+    <rect x="250" y="130" width="50" height="6" rx="2" fill="#5D4037"/>
+    <rect x="255" y="136" width="4" height="30" fill="#5D4037"/>
+    <rect x="291" y="136" width="4" height="30" fill="#5D4037"/>
+    <rect x="310" y="130" width="50" height="6" rx="2" fill="#5D4037"/>
+    <rect x="315" y="136" width="4" height="30" fill="#5D4037"/>
+    <rect x="351" y="136" width="4" height="30" fill="#5D4037"/>
+  </g>
+  <!-- 人物剪影 -->
+  <circle cx="70" cy="118" r="8" fill="#FFCC80" opacity="0.3"/>
+  <rect x="63" y="125" width="14" height="18" rx="3" fill="#AB47BC" opacity="0.3"/>
+  <ellipse cx="78" cy="118" rx="3" ry="4" fill="#FFCA28" opacity="0.4"/>
+  <text x="70" y="112" font-size="12" fill="#AB47BC" opacity="0.15" font-weight="bold">?</text>
+  <!-- 地面 -->
+  <rect y="166" width="400" height="34" fill="#D7CCC8" opacity="0.2"/>
+</svg>`,
+
+// 场景5: 会议多人说话
+`<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('s_h5_bg',[['0%','#E8EAF6'],['100%','#FFE0B2']])}
+  <rect width="400" height="200" fill="url(#s_h5_bg)"/>
+  <!-- 会议桌 -->
+  <ellipse cx="200" cy="120" rx="150" ry="30" fill="#7986CB" opacity="0.12"/>
+  <ellipse cx="200" cy="118" rx="148" ry="28" fill="#9FA8DA" opacity="0.08"/>
+  <!-- 人物1 -->
+  <circle cx="70" cy="70" r="12" fill="#FFCC80" opacity="0.3"/>
+  <rect x="60" y="80" width="20" height="30" rx="3" fill="#42A5F5" opacity="0.3"/>
+  <ellipse cx="82" cy="70" rx="3" ry="4" fill="#FFCA28" opacity="0.15"/>
+  <path d="M 55 62 Q 48 65 48 75 Q 48 82 55 85" fill="none" stroke="#42A5F5" stroke-width="1.5" opacity="0.15"/>
+  <!-- 人物2 -->
+  <circle cx="200" cy="55" r="12" fill="#FFCC80" opacity="0.3"/>
+  <rect x="190" y="65" width="20" height="30" rx="3" fill="#66BB6A" opacity="0.3"/>
+  <path d="M 185 47 Q 178 50 178 60 Q 178 67 185 70" fill="none" stroke="#66BB6A" stroke-width="1.5" opacity="0.15"/>
+  <path d="M 215 47 Q 222 50 222 60 Q 222 67 215 70" fill="none" stroke="#66BB6A" stroke-width="1.5" opacity="0.15"/>
+  <!-- 人物3 -->
+  <circle cx="330" cy="70" r="12" fill="#FFCC80" opacity="0.3"/>
+  <rect x="320" y="80" width="20" height="30" rx="3" fill="#FF7043" opacity="0.3"/>
+  <ellipse cx="318" cy="70" rx="3" ry="4" fill="#FFCA28" opacity="0.15"/>
+  <path d="M 345 62 Q 352 65 352 75 Q 352 82 345 85" fill="none" stroke="#FF7043" stroke-width="1.5" opacity="0.15"/>
+  <!-- 主角 -->
+  <circle cx="200" cy="135" r="12" fill="#FFCC80" opacity="0.4"/>
+  <rect x="190" y="145" width="20" height="30" rx="3" fill="#AB47BC" opacity="0.4"/>
+  <ellipse cx="212" cy="135" rx="4" ry="5" fill="#FFCA28" opacity="0.5" stroke="#F57F17" stroke-width="0.5"/>
+  <!-- 混乱声波 -->
+  <text x="200" y="160" font-size="7" fill="#AB47BC" opacity="0.3" text-anchor="middle">声音交织 · 难以分辨</text>
+  <!-- 问号 -->
+  <text x="175" y="130" font-size="14" fill="#AB47BC" opacity="0.2" font-weight="bold">?</text>
+  <text x="225" y="130" font-size="14" fill="#AB47PC" opacity="0.2" font-weight="bold">?</text>
+  <!-- 地面 -->
+  <rect y="175" width="400" height="25" fill="#D7CCC8" opacity="0.2"/>
+</svg>`,
+
+// 场景6: 电影院无字幕
+`<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('s_h6_bg',[['0%','#1A237E'],['30%','#311B92'],['100%','#4A148C']])}
+  <rect width="400" height="200" fill="url(#s_h6_bg)"/>
+  <!-- 银幕 -->
+  <rect x="80" y="20" width="240" height="90" rx="4" fill="#FAFAFA" opacity="0.85"/>
+  <!-- 电影画面 -->
+  <circle cx="160" cy="55" r="15" fill="#FFCC80" opacity="0.4"/>
+  <rect x="145" y="68" width="30" height="25" rx="3" fill="#42A5F5" opacity="0.3"/>
+  <circle cx="240" cy="55" r="15" fill="#FFAB91" opacity="0.4"/>
+  <rect x="225" y="68" width="30" height="25" rx="3" fill="#66BB6A" opacity="0.3"/>
+  <!-- 对话气泡（无字幕） -->
+  <ellipse cx="160" cy="50" rx="18" ry="10" fill="#FFF" opacity="0.3"/>
+  <text x="160" y="54" font-size="6" fill="#5D4037" opacity="0.4" text-anchor="middle">???</text>
+  <ellipse cx="240" cy="50" rx="18" ry="10" fill="#FFF" opacity="0.3"/>
+  <text x="240" y="54" font-size="6" fill="#5D4037" opacity="0.4" text-anchor="middle">???</text>
+  <!-- 无字幕标记 -->
+  <rect x="150" y="95" width="100" height="12" rx="2" fill="#EF5350" opacity="0.08"/>
+  <text x="200" y="104" font-size="7" fill="#EF5350" opacity="0.4" text-anchor="middle">无字幕</text>
+  <!-- 座位 -->
+  <g opacity="0.2">
+    <rect x="50" y="140" width="40" height="20" rx="4" fill="#5D4037"/>
+    <rect x="100" y="145" width="40" height="20" rx="4" fill="#5D4037"/>
+    <rect x="150" y="150" width="40" height="20" rx="4" fill="#5D4037"/>
+    <rect x="200" y="150" width="40" height="20" rx="4" fill="#5D4037"/>
+    <rect x="250" y="145" width="40" height="20" rx="4" fill="#5D4037"/>
+    <rect x="300" y="140" width="40" height="20" rx="4" fill="#5D4037"/>
+  </g>
+  <!-- 观众剪影 -->
+  <circle cx="115" cy="145" r="7" fill="#FFCC80" opacity="0.25"/>
+  <circle cx="170" cy="150" r="7" fill="#FFCC80" opacity="0.3"/>
+  <ellipse cx="182" cy="150" rx="3" ry="4" fill="#FFCA28" opacity="0.4"/>
+  <circle cx="225" cy="150" r="7" fill="#FFCC80" opacity="0.25"/>
+  <circle cx="280" cy="145" r="7" fill="#FFCC80" opacity="0.25"/>
+  <!-- 主角疑问 -->
+  <text x="170" y="142" font-size="12" fill="#FFCA28" opacity="0.2" font-weight="bold">?</text>
+</svg>`,
+],
+};
+
+// ============ 首页插画 ============
+const HOME_ART = `<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+  ${svgDef('home_bg',[['0%','#FFF3E0'],['100%','#FFE0B2']])}
+  <rect width="320" height="200" rx="16" fill="url(#home_bg_r)"/>
+  <!-- 太阳 -->
+  <circle cx="270" cy="35" r="20" fill="#FFD54F" opacity="0.5"/>
+  <g opacity="0.3" stroke="#FFD54F" stroke-width="2" stroke-linecap="round">
+    <line x1="270" y1="8" x2="270" y2="2"/>
+    <line x1="295" y1="35" x2="301" y2="35"/>
+    <line x1="250" y1="15" x2="246" y2="11"/>
+    <line x1="290" y1="15" x2="294" y2="11"/>
+  </g>
+  <!-- 左人物（轮椅） -->
+  <circle cx="70" cy="105" r="14" fill="none" stroke="#8D6E63" stroke-width="2.5" opacity="0.5"/>
+  <circle cx="70" cy="105" r="4" fill="#8D6E63" opacity="0.5"/>
+  <circle cx="88" cy="112" r="5" fill="none" stroke="#8D6E63" stroke-width="1.5" opacity="0.5"/>
+  <path d="M 70 105 L 80 80 L 92 80 L 100 112" fill="none" stroke="#8D6E63" stroke-width="2.5" opacity="0.5"/>
+  <circle cx="85" cy="65" r="12" fill="#FFCC80" opacity="0.5"/>
+  <path d="M 73 63 Q 71 48 85 44 Q 99 48 97 63 L 95 57 Q 85 40 75 57 Z" fill="#5D4037" opacity="0.5"/>
+  <path d="M 79 68 Q 85 72 91 68" fill="none" stroke="#5D4037" stroke-width="1.5" opacity="0.5" stroke-linecap="round"/>
+  <path d="M 76 80 Q 74 58 85 56 Q 96 58 94 80 Z" fill="#F9A825" opacity="0.4"/>
+  <!-- 中人物（墨镜手杖） -->
+  <circle cx="160" cy="65" r="12" fill="#FFCC80" opacity="0.5"/>
+  <path d="M 148 63 Q 146 48 160 44 Q 174 48 172 63 L 170 57 Q 160 40 150 57 Z" fill="#3E2723" opacity="0.5"/>
+  <rect x="150" y="61" width="7" height="6" rx="1.5" fill="#1A237E" opacity="0.5"/>
+  <rect x="163" y="61" width="7" height="6" rx="1.5" fill="#1A237E" opacity="0.5"/>
+  <line x1="157" y1="64" x2="163" y2="64" stroke="#3E2723" stroke-width="1" opacity="0.5"/>
+  <path d="M 151 74 Q 160 78 169 74" fill="none" stroke="#3E2723" stroke-width="1.5" opacity="0.5" stroke-linecap="round"/>
+  <path d="M 148 80 Q 146 95 160 97 Q 174 95 172 80 Z" fill="#3949AB" opacity="0.4"/>
+  <line x1="180" y1="95" x2="210" y2="130" stroke="#FAFAFA" stroke-width="2.5" opacity="0.5" stroke-linecap="round"/>
+  <rect x="207" y="127" width="5" height="7" rx="1.5" fill="#EF5350" opacity="0.3"/>
+  <!-- 右人物（助听器） -->
+  <circle cx="250" cy="65" r="12" fill="#FFCC80" opacity="0.5"/>
+  <path d="M 238 63 Q 236 48 250 44 Q 264 48 262 63 L 260 57 Q 250 40 240 57 Z" fill="#4E342E" opacity="0.5"/>
+  <circle cx="243" cy="65" r="2" fill="#3E2723" opacity="0.5"/>
+  <circle cx="257" cy="65" r="2" fill="#3E2723" opacity="0.5"/>
+  <ellipse cx="262" cy="65" rx="3.5" ry="4.5" fill="#FFCA28" opacity="0.5" stroke="#F57F17" stroke-width="0.5"/>
+  <path d="M 243 76 Q 250 80 257 76" fill="none" stroke="#3E2723" stroke-width="1.5" opacity="0.5" stroke-linecap="round"/>
+  <path d="M 238 80 Q 236 95 250 97 Q 264 95 262 80 Z" fill="#AB47BC" opacity="0.4"/>
+  <rect x="244" y="97" width="6" height="18" rx="2" fill="#6A1B9A" opacity="0.3"/>
+  <rect x="254" y="97" width="6" height="18" rx="2" fill="#6A1B9A" opacity="0.3"/>
+  <!-- 地面 -->
+  <ellipse cx="160" cy="140" rx="120" ry="8" fill="#D7CCC8" opacity="0.3"/>
+  <!-- 爱心连接 -->
+  <path d="M 100 70 Q 110 60 120 70 Q 130 60 140 70 Q 130 80 120 85 Q 110 80 100 70 Z" fill="#E84A5F" opacity="0.15"/>
+  <path d="M 180 70 Q 190 60 200 70 Q 210 60 220 70 Q 210 80 200 85 Q 190 80 180 70 Z" fill="#E84A5F" opacity="0.15"/>
+</svg>`;
+
+// ============ 结局插画 ============
+const ENDING_ART = {
+  high: `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+    ${svgDef('end_high_bg',[['0%','#E8F5E9'],['50%','#FFF8E1'],['100%','#FFE0B2']])}
+    <rect width="280" height="200" rx="16" fill="url(#end_high_bg_r)"/>
+    <circle cx="220" cy="35" r="20" fill="#FFD54F" opacity="0.5"/>
+    <!-- 三个人物手拉手 -->
+    <circle cx="80" cy="80" r="14" fill="#FFCC80" opacity="0.5"/>
+    <path d="M 68 78 Q 66 62 80 58 Q 94 62 92 78 L 90 72 Q 80 54 70 72 Z" fill="#5D4037" opacity="0.5"/>
+    <circle cx="75" cy="80" r="2" fill="#3E2723" opacity="0.5"/><circle cx="85" cy="80" r="2" fill="#3E2723" opacity="0.5"/>
+    <path d="M 74 90 Q 80 94 86 90" fill="none" stroke="#5D4037" stroke-width="1.5" opacity="0.5" stroke-linecap="round"/>
+    <path d="M 68 94 Q 66 120 80 125 Q 94 120 92 94 Z" fill="#F9A825" opacity="0.4"/>
+
+    <circle cx="140" cy="75" r="14" fill="#FFCC80" opacity="0.5"/>
+    <path d="M 128 73 Q 126 57 140 53 Q 154 57 152 73 L 150 67 Q 140 49 130 67 Z" fill="#3E2723" opacity="0.5"/>
+    <rect x="131" y="71" width="6" height="5" rx="1.5" fill="#1A237E" opacity="0.4"/>
+    <rect x="143" y="71" width="6" height="5" rx="1.5" fill="#1A237E" opacity="0.4"/>
+    <path d="M 134 85 Q 140 89 146 85" fill="none" stroke="#3E2723" stroke-width="1.5" opacity="0.5" stroke-linecap="round"/>
+    <path d="M 128 89 Q 126 115 140 120 Q 154 115 152 89 Z" fill="#3949AB" opacity="0.4"/>
+
+    <circle cx="200" cy="80" r="14" fill="#FFCC80" opacity="0.5"/>
+    <path d="M 188 78 Q 186 62 200 58 Q 214 62 212 78 L 210 72 Q 200 54 190 72 Z" fill="#4E342E" opacity="0.5"/>
+    <circle cx="195" cy="80" r="2" fill="#3E2723" opacity="0.5"/><circle cx="205" cy="80" r="2" fill="#3E2723" opacity="0.5"/>
+    <ellipse cx="213" cy="80" rx="3.5" ry="4.5" fill="#FFCA28" opacity="0.5"/>
+    <path d="M 194 90 Q 200 94 206 90" fill="none" stroke="#3E2723" stroke-width="1.5" opacity="0.5" stroke-linecap="round"/>
+    <path d="M 188 94 Q 186 120 200 125 Q 214 120 212 94 Z" fill="#AB47BC" opacity="0.4"/>
+
+    <!-- 手拉手 -->
+    <line x1="92" y1="110" x2="128" y2="105" stroke="#FFCC80" stroke-width="4" opacity="0.3" stroke-linecap="round"/>
+    <line x1="152" y1="105" x2="188" y2="110" stroke="#FFCC80" stroke-width="4" opacity="0.3" stroke-linecap="round"/>
+    <!-- 爱心 -->
+    <path d="M 120 50 Q 130 40 140 50 Q 150 40 160 50 Q 150 60 140 65 Q 130 60 120 50 Z" fill="#E84A5F" opacity="0.3"/>
+    <!-- 地面 -->
+    <ellipse cx="140" cy="140" rx="100" ry="8" fill="#D7CCC8" opacity="0.3"/>
+    <!-- 小花 -->
+    <circle cx="40" cy="135" r="4" fill="#E84A5F" opacity="0.3"/><circle cx="240" cy="135" r="4" fill="#E84A5F" opacity="0.3"/>
+  </svg>`,
+
+  mid: `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+    ${svgDef('end_mid_bg',[['0%','#FFF8E1'],['100%','#FFE0B2']])}
+    <rect width="280" height="200" rx="16" fill="url(#end_mid_bg_r)"/>
+    <circle cx="140" cy="80" r="16" fill="#FFCC80" opacity="0.5"/>
+    <path d="M 126 78 Q 124 60 140 55 Q 156 60 154 78 L 152 70 Q 140 50 128 70 Z" fill="#3E2723" opacity="0.5"/>
+    <circle cx="134" cy="80" r="2.5" fill="#3E2723" opacity="0.5"/><circle cx="146" cy="80" r="2.5" fill="#3E2723" opacity="0.5"/>
+    <path d="M 133 90 Q 140 93 147 90" fill="none" stroke="#3E2723" stroke-width="1.5" opacity="0.5" stroke-linecap="round"/>
+    <path d="M 126 96 Q 124 130 140 135 Q 156 130 154 96 Z" fill="#42A5F5" opacity="0.4"/>
+    <!-- 半透明的路 -->
+    <path d="M 100 150 Q 140 145 180 150" fill="none" stroke="#FFD54F" stroke-width="3" stroke-dasharray="5 5" opacity="0.3"/>
+    <ellipse cx="140" cy="155" rx="60" ry="8" fill="#D7CCC8" opacity="0.3"/>
+    <!-- 问号 -->
+    <text x="200" y="65" font-size="20" fill="#FF9800" opacity="0.2" font-weight="bold">?</text>
+  </svg>`,
+
+  low: `<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+    ${svgDef('end_low_bg',[['0%','#FFEBEE'],['100%','#FFCDD2']])}
+    <rect width="280" height="200" rx="16" fill="url(#end_low_bg_r)"/>
+    <circle cx="140" cy="80" r="16" fill="#FFCC80" opacity="0.4"/>
+    <path d="M 126 78 Q 124 60 140 55 Q 156 60 154 78 L 152 70 Q 140 50 128 70 Z" fill="#3E2723" opacity="0.4"/>
+    <circle cx="134" cy="80" r="2.5" fill="#3E2723" opacity="0.4"/><circle cx="146" cy="80" r="2.5" fill="#3E2723" opacity="0.4"/>
+    <path d="M 133 92 Q 140 88 147 92" fill="none" stroke="#3E2723" stroke-width="1.5" opacity="0.4" stroke-linecap="round"/>
+    <path d="M 126 96 Q 124 130 140 135 Q 156 130 154 96 Z" fill="#78909C" opacity="0.3"/>
+    <ellipse cx="140" cy="155" rx="50" ry="8" fill="#D7CCC8" opacity="0.3"/>
+    <!-- 省略号 -->
+    <text x="120" y="120" font-size="16" fill="#90A4AE" opacity="0.2">. . .</text>
+  </svg>`,
+};
+
+// ============ 改造前后插画 ============
+function getRenoSVG(type, eventIdx, isAfter) {
+  const beforeScenes = {
+    physical: ['台阶阻挡','公交缝隙','旋转门','高窗台','餐厅台阶','无直梯'],
+    visual: ['黑板小字','无声红绿灯','纸质表格','无盲道','小字聊天','小标签'],
+    hearing: ['课堂听不清','无声来车','电话铃声','叫号听不见','会议混乱','无字幕'],
+  };
+  const afterScenes = {
+    physical: ['坡道通行','无缝踏板','自动平开门','低位窗口','坡道+宽门','无障碍电梯'],
+    visual: ['大字+助视','语音红绿灯','电子表格','盲道引导','文字描述','语音标签'],
+    hearing: ['PPT字幕','闪烁警示','文字面试','振动叫号','实时字幕','字幕场次'],
+  };
+  const label = isAfter ? afterScenes[type][eventIdx] : beforeScenes[type][eventIdx];
+  const color = isAfter ? '#66BB6A' : '#EF5350';
+  const bgColor = isAfter ? '#E8F5E9' : '#FFEBEE';
+  const icon = isAfter ? '✅' : '❌';
+
+  return `<svg viewBox="0 0 180 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="180" height="100" rx="8" fill="${bgColor}" opacity="0.5"/>
+    <rect x="10" y="10" width="160" height="80" rx="6" fill="${isAfter ? '#C8E6C9' : '#FFCDD2'}" opacity="0.3"/>
+    <text x="90" y="40" font-size="24" text-anchor="middle">${icon}</text>
+    <text x="90" y="65" font-size="10" fill="${color}" text-anchor="middle" font-weight="bold">${label}</text>
+    <text x="90" y="80" font-size="7" fill="${color}" text-anchor="middle" opacity="0.6">${isAfter ? '改造后' : '改造前'}</text>
+  </svg>`;
+}
+
+/* ============================================================
+   游戏数据
+   ============================================================ */
+const GAME_DATA = {
+  physical: {
+    name: '肢体障碍',
+    icon: '🦽',
+    iconImg: '肢体障碍.png',
+    color: '#7CB89E',
+    bgGradient: [['0%','#FFF8E1'],['100%','#FFE0B2']],
+    desc: '以轮椅使用者的视角体验世界',
+    events: [
+      { id:1, stage:'儿童期 · 6岁', stageType:'child', title:'上学的第一天', mapX:28, mapY:28, landmark:'🏫 阳光小学',
+        scene:'开学第一天，妈妈推着你的轮椅来到教学楼前。阳光很好，但你面前是三层的台阶，没有坡道。同学们像小鸟一样蹦跳着跑进教室，而你停在台阶下面，第一次意识到自己"不一样"。',
+        sceneSemi:'开学第一天，你在校门口看到一个坐轮椅的孩子被三层台阶挡在教学楼外。同学们蹦跳着跑进教室，只有他停在台阶下，阳光照在他脸上，表情复杂。',
+        optionA:'主动向老师反映情况，建议学校修建无障碍坡道',
+        optionASemi:'上前询问是否需要帮助，并主动向学校反映无障碍需求',
+        optionB:'让妈妈每天辛苦地背你上下台阶',
+        optionBSemi:'虽然觉得可怜，但觉得这不关你的事，快步走开',
+        feedbackA:{emotion:'你勇敢地为自己发声了！每个人的声音都值得被听见，尤其是那些为平等而发出的声音。你的勇气不仅改变了自己的处境，也为后来需要帮助的同学打开了方便之门。',knowledge:'根据《无障碍环境建设法》第二十四条，教育机构应当配置无障碍设施设备。义务教育阶段的学校须为残疾学生提供合理便利。'},
+        feedbackASemi:{emotion:'你的一个善意举动，可能改变一个孩子整个的学习体验。帮助不是施舍，而是让每个人都能平等地走进那扇门的权利。',knowledge:'根据《无障碍环境建设法》第二十四条，教育机构应当配置无障碍设施设备。任何公民都有权向教育部门反映无障碍问题。'},
+        feedbackB:{emotion:'妈妈的爱很伟大，但完全依靠他人并不是长久之计。每次被背起的瞬间，你都在心里问自己：为什么我和别人不一样？这不是你的问题，是环境的问题。',knowledge:'过度依赖他人会导致残障人士的自我效能感降低。无障碍环境不仅能提供物理上的便利，更能从心理层面给予残障人士"我可以"的自信。'},
+        feedbackBSemi:{emotion:'快步走过的那一瞬间，你可能松了一口气——但那个孩子每天都要面对那道迈不过去的台阶。下一次，请停下脚步。',knowledge:'研究表明，旁观者的善意行动能显著提升残障人士的社会归属感。你不需要解决所有问题，只需要迈出第一步。'},
+        hasRenovation:true,
+        renovation:{location:'🏫 阳光小学教学楼入口',scene:'教学楼前只有三层台阶，轮椅无法通行。',before:'三层裸露的台阶，没有任何辅助设施。坐轮椅的学生每天需要被人工搬运上下，不仅不方便，还存在安全隐患。',after:'台阶旁新建了一条标准无障碍坡道，坡度1:12，宽度1.2米，两侧有扶手。轮椅可以轻松推上，所有行动不便的同学都能独立进出教学楼。'}
+      },
+      { id:2, stage:'青少年期 · 16岁', stageType:'teen', title:'第一次独自出行', mapX:58, mapY:32, landmark:'🚌 市中心公交站',
+        scene:'16岁的你决心独自去市图书馆。公交站台上，你等了很久的车终于来了。但车门距离站台边缘有一道15厘米的缝隙——轮椅无法直接上去。司机的目光落在你身上，似乎在等着什么。',
+        sceneSemi:'你在公交站看到一位轮椅使用者等了很久的车。车门与站台之间有一道明显的缝隙，轮椅无法上去。司机的目光有些复杂，周围的人也都在看。',
+        optionA:'主动向司机求助，请他使用车上的无障碍踏板',
+        optionASemi:'主动上前帮忙，协助司机放下无障碍踏板',
+        optionB:'感到尴尬和羞耻，假装不是要上车，等下一班',
+        optionBSemi:'站在一旁看着，觉得"总有人会帮忙的"',
+        feedbackA:{emotion:'开口求助需要勇气，而你做到了！独立出行的第一步往往最难，但你迈出去了。司机的配合和你的坚持，让这一次"平常"的出行成为了一个不平常的胜利。',knowledge:'我国已有超过200个城市配置了低地板无障碍公交车，后门配备手动或电动踏板。根据《城市公共交通条例》，公交运营企业应为残疾人乘车提供便利。'},
+        feedbackASemi:{emotion:'你的援手让一次"不可能"的出行变成了"可能"。有时候，一个简单的动作——上前一步、说一句话——就能改变一个人的一天。',knowledge:'我国已有超过200个城市配置了低地板无障碍公交车。遇到轮椅使用者乘车困难时，可以协助司机操作无障碍踏板。'},
+        feedbackB:{emotion:'在众人注目中放弃的那一刻，心里涌上来的不是轻松，而是更深的无力感。但请明白：错不在你，障碍也不在你。是这个世界还没有准备好迎接每一个不同的人。',knowledge:'研究表明，70%以上的残障人士曾因公共场所的无障碍问题而放弃出行。这种"自我限制"会逐渐缩小一个人的生活半径，导致社会参与度降低。'},
+        feedbackBSemi:{emotion:'你看着那个人在众人目光中默默退回路边，错过了这班车。下一次，如果有下一次，请不要再把希望寄托在"总有人"身上。',knowledge:'研究表明，"旁观者效应"在公共场所非常普遍——每个人都觉得别人会帮忙，结果没人出手。主动上前反而会让其他人也跟进。'},
+        hasRenovation:true,
+        renovation:{location:'🚌 市中心公交站台',scene:'站台与公交车之间存在缝隙，缺乏无障碍设施。',before:'普通站台与公交车地板存在10-20厘米高差和水平缝隙，轮椅使用者需要他人帮助或冒险跨越，极易发生危险。',after:'站台设置了无障碍乘车区，地面铺设导盲和轮椅引导标识。公交到站时，司机可将电动踏板伸出，与站台无缝对接，轮椅可安全平稳上下车。'}
+      },
+      { id:3, stage:'成年期 · 25岁', stageType:'adult', title:'心仪工作的面试', mapX:78, mapY:22, landmark:'🏢 星辉设计公司',
+        scene:'你收到了梦寐以求的设计公司面试邀请。精心准备了作品集，换上最正式的衣服。可到了公司楼下，发现入口只有旋转门——轮椅完全进不去。面试时间还有15分钟，你的手心开始出汗。',
+        sceneSemi:'你在办公楼前看到一个人穿着正装、坐着轮椅，面前是旋转门。他手里拿着简历，表情焦急——面试时间快到了，但他进不了这栋楼。',
+        optionA:'立即联系HR说明情况，请公司安排临时通道',
+        optionASemi:'上前询问情况，帮他联系HR说明需要临时通道',
+        optionB:'觉得自己"太麻烦"，默默离开，放弃面试',
+        optionBSemi:'觉得"他自己会想办法的"，匆匆经过赶自己的事',
+        feedbackA:{emotion:'你不仅为自己争取了一次宝贵的机会，更让这家公司意识到了无障碍的重要性。有时候，改变世界的方式就是勇敢地说出"我需要"。能力从不会被身体条件定义。',knowledge:'《残疾人就业条例》第十三条规定：用人单位应当为残疾人职工提供适应其身体状况的劳动条件和劳动保护。拒绝提供合理便利可能构成就业歧视。'},
+        feedbackASemi:{emotion:'你一个简单的帮助——拨通电话、传递一句话——可能帮助一个有能力的人获得了展示才华的机会。有时候改变世界的起点，就是这么小的一步。',knowledge:'《残疾人就业条例》要求用人单位提供合理便利。有时候一点点外部帮助，就能让残障人士展现出超乎想象的能力。'},
+        feedbackB:{emotion:'放弃的不仅仅是一场面试，而是一次让世界看到你才华的机会。但请别太苛责自己——这种无力感不是你的错，是社会环境的不足让你做出了这个令人心碎的选择。',knowledge:'中国有约1700万就业年龄段的残障人士。未被充分利用的人才资源不仅是个人的遗憾，也是社会的损失。合理的无障碍设施只需很少的成本，却能释放巨大的社会价值。'},
+        feedbackBSemi:{emotion:'走过的那一刻，你错过了什么？一个优秀的设计师、一个可能改变团队的人——仅仅因为一道他用不了的门。我们抱怨"遇不到合适的人"，却从没想过他们被挡在了门外。',knowledge:'中国有约1700万就业年龄段的残障人士。一个旋转门背后可能藏着巨大的社会资源浪费。每个人都可以成为那个"打开侧门"的人。'},
+        hasRenovation:true,
+        renovation:{location:'🏢 星辉设计公司办公楼',scene:'办公楼入口只有旋转门，轮椅无法通过。',before:'入口仅设置旋转门，缺乏平开门或自动感应门。轮椅使用者完全无法独立进入，面试或拜访都需要提前联系他人开侧门。',after:'旋转门旁增设了无障碍自动感应平开门，宽度1米以上，带低位开关。门口铺设了防滑地面，并设置了无障碍标识。所有来访者都能体面地进入办公楼。'}
+      },
+      { id:4, stage:'成年期 · 30岁', stageType:'adult', title:'独自去医院看病', mapX:35, mapY:60, landmark:'🏥 市中心医院',
+        scene:'连续几天的低烧让你不得不独自来到医院。挂号窗口比你坐着时还高出许多，你够不到写字的台面。候诊区的座椅都是固定的，轮椅没法靠近。叫号屏幕上跳动着你的号码。',
+        sceneSemi:'你在医院看到一位轮椅使用者够不到挂号窗口——台面比他坐着时高出许多。候诊区没有轮椅位置，他停在过道中央，看起来很不自在。',
+        optionA:'向医院志愿者求助，并通过意见箱或在线渠道反馈建议',
+        optionASemi:'上前帮助他在挂号窗口沟通，并建议他通过意见箱反馈',
+        optionB:'因为不便而默默离开，决定回家忍着病痛',
+        optionBSemi:'觉得"医院应该会有人管的"，继续排队等自己的号',
+        feedbackA:{emotion:'医疗是基本人权，而你守护了自己的这项权利。向医院提出建议不是"找麻烦"，而是在为所有行动不便的人铺路。今天你的一个反馈，明天可能就帮到了另一个需要的人。',knowledge:'国家卫健委发布的《医疗机构无障碍环境建设规范》要求医院设置低位服务窗口、无障碍停车位、无障碍卫生间等。全国已有超过60%的三级医院完成了基础无障碍改造。'},
+        feedbackASemi:{emotion:'你的一次举手之劳，不仅帮他挂上了号，更让他感受到了被尊重的温暖。医疗公平不只是口号，是每个人都能迈出国门就医的权利。',knowledge:'国家卫健委要求医院设置低位服务窗口。遇到就医不便的残障人士，可以协助联系医院志愿者或导诊人员。'},
+        feedbackB:{emotion:'病痛可以忍，但被忽视的尊严不能。当你转身离开的那一刻，心里是委屈还是麻木？请记住：健康不容拖延，而你值得被好好对待——就像任何一个走进医院的人一样。',knowledge:'残障人士的就医障碍不仅包括物理环境障碍，还包括信息障碍和态度障碍。超过40%的残障人士曾因无障碍问题推迟或放弃就医。'},
+        feedbackBSemi:{emotion:'你继续排着队，那个人却推着轮椅离开了。挂号只是开始——候诊、检查、取药，每一个环节对他都是考验。下次，希望你不再只是"等下一个人"。',knowledge:'超过40%的残障人士曾因无障碍问题推迟或放弃就医。医院的每个环节都可能存在隐性障碍。'},
+        hasRenovation:true,
+        renovation:{location:'🏥 市中心医院门诊大厅',scene:'挂号窗口高于轮椅使用者的视平线，候诊区缺乏轮椅停放空间。',before:'挂号缴费窗口台面高1.2米，轮椅使用者完全够不到。候诊区均为固定座椅，轮椅没有停放位置，只能停在过道中央。',after:'增设低位服务窗口，台面高度降至75厘米，下方留出轮椅容膝空间。候诊区划出轮椅专用等候位，叫号屏幕增加语音播报。'}
+      },
+      { id:5, stage:'成年期 · 32岁', stageType:'adult', title:'老同学的聚会邀请', mapX:55, mapY:60, landmark:'🍽️ 老友记餐厅',
+        scene:'高中群里热闹非凡，班长组织了一场聚会，地点选在某家很有格调的网红餐厅。你知道那家店——入口有三层台阶，没有坡道，里面的卫生间也很窄。看着群里的欢声笑语，你的手指停在键盘上。',
+        sceneSemi:'你的同学群在热火朝天地讨论聚会场地。你注意到有个同学一直没发言——他突然说"我就不去了"。你想起他是轮椅使用者，而大家选的餐厅有三层台阶。',
+        optionA:'提前联系餐厅确认无障碍情况，与组织者坦诚沟通',
+        optionASemi:'在群里发言，建议换个无障碍的餐厅，大家都该在场',
+        optionB:'以"最近比较忙"为由拒绝，独自在家刷大家的朋友圈',
+        optionBSemi:'觉得换个地方太麻烦了，假装没注意到他的处境',
+        feedbackA:{emotion:'坦诚需要巨大的勇气，而你的坦诚让朋友们有机会理解你、支持你。真正的友谊不会被无障碍设施"难倒"——大不了换个餐厅，但少了你，聚会就不完整了。',knowledge:'社交孤立是残障人士面临的主要心理挑战之一。研究表明，残障人士的社交网络平均比非残障人士小30%。社会包容性不仅是物理可及性，还包括情感上的接纳。'},
+        feedbackASemi:{emotion:'你的主动提议让所有人都意识到：聚会的意义是团聚，不是场所。真正的朋友会为彼此考虑——你的"多嘴"可能让一个缺席的人重新回到了圈子里。',knowledge:'社交孤立是残障人士面临的主要心理挑战。简单的选址调整就能提升聚会包容性——提前确认无障碍情况，聚餐前多问一句。'},
+        feedbackB:{emotion:'群里的照片一张张刷过去，朋友们笑得那么开心。你告诉自己"没什么"，但被排除在外的感觉像一根刺。不是不想去，是害怕成为那个"需要特殊照顾"的人。但你没有错——错的是这个让你不敢赴约的世界。',knowledge:'"自我排除"是残障人士常见的行为模式。长期面对环境障碍后，许多人会主动预判困难并选择放弃，逐渐退出社交生活。'},
+        feedbackBSemi:{emotion:'你不想麻烦大家换地方，但他干脆就不来了。一场"圆满"的聚会少了一个人，你们甚至没有意识到。有时候包容不需要大动作，只需要换一个稍微不同的角度。',knowledge:'"自我排除"是残障人士常见的行为模式。作为朋友，主动询问"你需要我怎么配合"比沉默更温暖。'},
+        hasRenovation:true,
+        renovation:{location:'🍽️ "老友记"主题餐厅',scene:'餐厅入口有三层台阶，轮椅无法进入。',before:'餐厅入口有三层台阶，无坡道。卫生间门宽仅60厘米，轮椅无法进入。这样的餐厅在中国城市中占比仍然很大。',after:'入口增建了可折叠的无障碍坡道，卫生间改造为无障碍卫生间，门宽90厘米，每张桌子旁预留了轮椅位。'}
+      },
+      { id:6, stage:'成年期 · 35岁', stageType:'adult', title:'周末的日常采购', mapX:78, mapY:58, landmark:'🛒 万家生活超市',
+        scene:'难得的周末，你想自己去超市买些新鲜食材做一顿好饭。可到了超市门口，发现只有自动扶梯和楼梯可以上二楼——没有电梯。看着超市里人来人往，每个人都在为自己的生活奔忙。',
+        sceneSemi:'你在超市门口看到一位轮椅使用者在入口徘徊——通往二楼的通道只有自动扶梯和楼梯，没有电梯。他时不时抬头看看，又低头看手机。',
+        optionA:'寻找工作人员帮助，并通过APP和意见信向超市反映需求',
+        optionASemi:'帮他去服务台找工作人员反映问题，并留一份意见建议',
+        optionB:'转身回家，决定以后只在网上下单，再也不出门',
+        optionBSemi:'觉得"现在网购这么方便，何必非要出门"，转头进了超市',
+        feedbackA:{emotion:'你的坚持不仅为自己争取到了逛超市的权利，也可能推动了整个连锁品牌的无障碍改造。每一次"不便"的表达，都是在提醒社会：无障碍不是恩赐，是权利。逛超市这样平凡的幸福，每个人都应该拥有。',knowledge:'根据中国消费者协会调查，超过57%的残障消费者在购物时遇到无障碍障碍。无障碍设施不仅是坡道和电梯，还包括货架高度、结算通道宽度等细节。'},
+        feedbackASemi:{emotion:'你帮忙跑的一趟服务台，不仅帮他买到了想要的食材，更让超市看到了改进的空间。每一次"不便"的反馈，都是在推动这个城市变得更友好。',knowledge:'超过57%的残障消费者在购物时遇到障碍。作为普通消费者，向商家反映无障碍问题是一种积极的公民参与。'},
+        feedbackB:{emotion:'网购确实方便，但屏幕永远替代不了阳光照在蔬菜上的光泽、人群中的烟火气息。你放弃的不是一次购物，而是走出家门、感受世界的权利。请相信：你应该在这个世界里拥有一个位置。',knowledge:'虽然数字技术为残障人士提供了替代方案，但线下的社交和生活体验不可替代。真正的无障碍是线上和线下的双重可达。'},
+        feedbackBSemi:{emotion:'你说"何必非要出门"，但你每周都能轻松走进超市，挑选新鲜的果蔬——这种"平凡"对他来说却是奢望。不要用"方便"来合理化"排除"。',knowledge:'线上购物为残障人士提供了替代方案，但线下的生活体验与人际互动无法被完全替代。真正的包容是线上和线下的双重可达。'},
+        hasRenovation:true,
+        renovation:{location:'🛒 万家生活超市入口',scene:'超市入口只有自动扶梯和楼梯，缺乏无障碍电梯。',before:'通往二楼的通道仅有自动扶梯和传统楼梯。轮椅使用者无法自主进入二楼购物区。',after:'入口旁增设了一部无障碍电梯，按钮高度适宜轮椅使用者操作，内部有语音播报和盲文标识。'}
+      }
+    ],
+    endings:{
+      high:{title:'高共情 · 明眼人',levelText:'共情等级：明眼人',text:'你的每一次选择都充满了理解与勇气。你不仅体验了肢体障碍人士面对的困境，更看到了改变的可能。\n\n无障碍不是"帮助他们"，而是"还给每个人本就该有的权利"。一个真正文明的社会，是让每一个人都能有尊严地生活、学习、工作、社交——无论他们以怎样的方式行走于这个世界。\n\n你已经是那束照进裂缝的光。请将这份共情带入现实生活。'},
+      mid:{title:'中共情 · 同行者',levelText:'共情等级：同行者',text:'你在这段旅程中有所体会，但有时也没有做出最合适的选择。这很正常——真正的理解从来不是一蹴而就的。\n\n你或许已经感受到：残障人士的生活困境不仅是身体上的限制，更是环境障碍和观念偏见共同造成的。\n\n希望下一次，当你在生活中遇到需要帮助的人时，能回忆起今天的体验。'},
+      low:{title:'低共情 · 初学者',levelText:'共情等级：初学者',text:'这段旅程中，你可能更多地选择了回避或忽视。但没关系——觉察本身就是改变的第一步。\n\n残障不是"少数人的事"。全国有超过8500万残障人士，平均每16个人中就有1位。他们可能是你的同学、同事、朋友，也可能是未来的你。\n\n希望你能重新开始这段旅程，用新的视角去感受。'}
+    }
+  },
+  visual: {
+    name: '视力障碍',
+    icon: '👨\u200d🦯',
+    iconImg: '视障.png',
+    color: '#5B8C9E',
+    bgGradient: [['0%','#E8EAF6'],['100%','#FFF3E0']],
+    desc: '以低视力者的视角感受世界',
+    events: [
+      { id:1, stage:'儿童期 · 7岁', stageType:'child', title:'黑板上的世界', mapX:20, mapY:22, landmark:'🏫 阳光小学',
+        scene:'新学期开始，你被安排在教室最后一排。老师开始在黑板上写字，阳光透过窗户反射在黑板表面。你眯起眼睛，努力辨认那些模糊的白色线条，但周围的同学已经开始抄写笔记了。',
+        sceneSemi:'你路过一间教室，看到老师正在黑板上展示一张图表。角落里有个孩子眯着眼睛，满脸困惑——黑板上模糊的白色线条对他来说只是光影。周围的同学早已开始抄写。',
+        optionA:'告诉老师你的视力情况，请求调到前排座位',
+        optionASemi:'注意到这个情况，课后向老师建议为视力不好的同学提供大字版资料',
+        optionB:'不想被区别对待，假装自己能看清，课后借同学笔记',
+        optionBSemi:'觉得这是老师和家长该管的事，径直走过',
+        feedbackA:{emotion:'你勇敢地说出了自己的需求。视力障碍学生的合理便利是法定权利——调整座位或提供大字版教材，这些小小的改变能让你和所有人坐在同一条起跑线上。',knowledge:'我国约有1700万视力障碍人士。《无障碍环境建设法》要求学校为视力障碍学生提供必要的学习辅助设施。'},
+        feedbackASemi:{emotion:'你或许只是顺口和老师提了一句，但这句提醒可能就是那个孩子学习生涯的转折点。大字版资料、调近座位——极小的改变，巨大的意义。',knowledge:'我国约有1700万视力障碍人士。给视力障碍学生提供大字版教材和调整座位，是学校教育的基本责任。'},
+        feedbackB:{emotion:'假装能看清的日子很辛苦吧。但你不必一个人扛——环境的障碍不应该由个体独自承担。你的视力不是"缺陷"，而是这个世界需要调整光照、字号和距离来适应你。',knowledge:'视力障碍学生在普通班级中常因"不想特殊化"而隐瞒困难，但这往往导致学习成绩下滑和心理压力增大。'},
+        feedbackBSemi:{emotion:'你匆匆走过，但那个孩子还要在那间教室里坐好几年。有些事，真的不是你绕过它就不存在了。下一次，或许可以多看一眼，多说一句。',knowledge:'视力障碍学生常因"不想特殊化"而隐瞒困难。作为同学或旁观者，一个善意的关注就可能帮助他们走出困境。'},
+        hasRenovation:false, renovation:null
+      },
+      { id:2, stage:'青少年期 · 15岁', stageType:'teen', title:'危险的十字路口', mapX:55, mapY:26, landmark:'🚦 市中心十字路口',
+        scene:'第一次独自上学途经一个没有语音提示的大十字路口。车流不息，你看不清对面的红绿灯颜色，只能凭借车流的声音来判断何时过马路。喇叭声此起彼伏，你手心全是汗。',
+        sceneSemi:'你在路口等红灯，注意到旁边一位手持盲杖的人。绿灯亮了，但他没有动——红绿灯没有声音提示，他完全不知道现在可以通行。',
+        optionA:'主动向路人求助，并拨打市民热线反映红绿灯缺乏语音提示的问题',
+        optionASemi:'轻轻上前告知"现在是绿灯"，询问是否需要协助过马路',
+        optionB:'等了很久很久，趁听起来"车少了"时冲过去',
+        optionBSemi:'犹豫了一下，绿灯快结束了，你独自快步过了马路',
+        feedbackA:{emotion:'求助不是软弱，反馈不是抱怨。你的一个电话可能让交通部门注意到这个路口的问题，从而帮助成百上千的视力障碍者安全出行。',knowledge:'中国已有多个城市在主要路口安装了语音提示红绿灯。北京、上海、深圳等城市的路口无障碍覆盖率已超过60%。'},
+        feedbackASemi:{emotion:'一句"现在是绿灯"花不了五秒钟，但对方因为你这句话安全地过了马路。有时候，"帮助"不需要特殊的训练——只需要注意到他的存在。',knowledge:'中国已有多个城市安装了语音红绿灯。遇到视力障碍者过马路时，询问"需要协助过马路吗"是一个得体的帮助方式。'},
+        feedbackB:{emotion:'那几秒的"冲刺"后，你的心跳大概很久才平复。但这太危险了——你值得安全地走过每一条街道。没有人应该用生命去赌一个"可能是绿灯"。',knowledge:'视力障碍者过马路是城市出行中最危险的环节之一。国际通用的解决方案包括：语音红绿灯、振动提示、触觉地砖引导。'},
+        feedbackBSemi:{emotion:'你过了马路，回头看了一眼——他还站在原地。其实你只需要开口问一句，就能让他安全地跨过这条路口。下一次，请不要再犹豫。',knowledge:'视力障碍者过马路是最危险的日常场景之一。"帮忙看看红绿灯"是最简单有效的协助方式。'},
+        hasRenovation:true,
+        renovation:{location:'🚦 市中心十字路口',scene:'路口红绿灯无语音提示，盲道被共享单车占据。',before:'路口四角虽然铺设了盲道，但红绿灯无任何声音提示。视力障碍者需要依靠车流声音或他人帮助过马路，安全隐患极大。',after:'安装了语音提示红绿灯，绿灯时以节奏性"嗒嗒"声提示。盲道清理畅通，路口加装触觉地图指示牌。'}
+      },
+      { id:3, stage:'成年期 · 23岁', stageType:'adult', title:'求职面试的考验', mapX:82, mapY:16, landmark:'🏢 面试等候区',
+        scene:'你依靠读屏软件完成了简历投递，终于收到面试邀请。但到了现场，HR递给你一份纸质表格让你填写。你看不清表格上的小字，周围的目光让你感到局促。',
+        sceneSemi:'你在面试等候区，看到HR给一位求职者递了一张纸说"先填个表"。那个人迟疑了一下，开始在纸上摸索——他看不清表格上的小字。',
+        optionA:'坦诚告知HR你的视力情况，请他们提供电子版或口头问答替代',
+        optionASemi:'主动上前，帮他把表格内容口头读出来',
+        optionB:'硬着头皮随便填了几个空，觉得这次面试肯定没希望了',
+        optionBSemi:'低头继续看自己的准备材料，觉得HR应该会处理',
+        feedbackA:{emotion:'你的坦诚不仅为自己争取了公平竞争的机会，也让这家公司意识到了招聘流程中的无障碍漏洞。有时改变不是靠斗争，而是靠一次简单的沟通。',knowledge:'《残疾人就业条例》要求用人单位在招聘中不得歧视残疾人。合理的便利不是"特权"，而是一个公平的起跑线。'},
+        feedbackASemi:{emotion:'你主动读出了表格内容，这个简单的举动让他得以完成填表。也许他就是这间公司未来的优秀员工——而你是他在面试中遇到的第一个善意。',knowledge:'《残疾人就业条例》要求用人单位提供合理便利。帮助视障求职者填写表格，简单却意义重大。'},
+        feedbackB:{emotion:'你可能觉得自己"搞砸了"，但真正该反思的是为什么一张纸就足以拦住一个有才华的人。不是你的视力限制了你，是那个没有考虑过多样化需求的环境在限制你。',knowledge:'许多企业尚未将无障碍纳入招聘流程。提供电子表格或口头问答对公司的成本几乎为零，带来的却是人才多样性。'},
+        feedbackBSemi:{emotion:'你继续看手机，他还在那张纸上摸索。有时候我们习惯性地认为"别人会做的"。但万一，就是没有人呢？',knowledge:'许多企业在招聘中缺乏无障碍意识。有时候需要旁观者的一句提醒，才能让企业意识到问题所在。'},
+        hasRenovation:false, renovation:null
+      },
+      { id:4, stage:'成年期 · 28岁', stageType:'adult', title:'陌生的医院', mapX:28, mapY:55, landmark:'🏥 市第二人民医院',
+        scene:'你因突发眼疾去一家不熟悉的医院就诊。大厅里没有盲道，科室指示牌字体很小，你找不到眼科在哪里。周围人来人往，你不好意思一直问路。',
+        sceneSemi:'你在医院大厅看到一位盲人茫然地站着——大厅没有盲道，指示牌又高又小。他试探性地向前走两步，又退了回来。',
+        optionA:'到导诊台求助，并向医院建议增加盲道和语音导航',
+        optionASemi:'上前询问需要什么帮助，引导他到正确的科室',
+        optionB:'硬着头皮自己摸索，走错了好几个科室，耽误了很多时间',
+        optionBSemi:'匆匆走过，觉得"医院导诊会处理的"',
+        feedbackA:{emotion:'你选择了一条更有效率的路——求助。而你的反馈可能会帮助这个医院完善导引系统。很多时候，改变只需要一个人说出"这里可以更好"。',knowledge:'医疗机构的无障碍导引应包括：地面触觉引导（盲道）、大字体指示牌、语音导航系统、人工导诊服务。'},
+        feedbackASemi:{emotion:'带他去眼科室可能只花了你三分钟，但这三分钟对他来说，可能省下了半小时的焦虑和无助。医院的标语是"以人为本"，而你需要做的就是让这四个字落地。',knowledge:'医疗机构的无障碍导引应包括盲道、语音导航、导诊服务。主动为视力障碍者提供导引是最直接的帮助方式。'},
+        feedbackB:{emotion:'在陌生的地方"摸黑"前行，每一步都充满不安。这段时间本可以花在治疗上，却浪费在了不被看见的障碍上。下一次，请记得求助——这不是给别人添麻烦。',knowledge:'医院是最应该"无障碍"的场所。清晰的无障碍导引系统能让就医效率提升30%以上。'},
+        feedbackBSemi:{emotion:'他还在原地徘徊——而你已经在走廊尽头了。医院里每个人都很忙，但"总有人会帮"不能成为不作为的理由。下次，请做那个人。',knowledge:'医院是视障人士最常面临的"陌生环境"之一。简洁有效的人工导引是最基础的无障碍服务。'},
+        hasRenovation:true,
+        renovation:{location:'🏥 市第二人民医院门诊大厅',scene:'大厅缺乏盲道和清晰的语音导航系统。',before:'医院大厅地面统一为光滑瓷砖，无任何触觉引导标识。指示牌字体偏小且位置较高。',after:'地面铺设了触觉盲道引导至挂号处、药房、各楼层电梯口。关键节点设置语音播报和触觉地图。'}
+      },
+      { id:5, stage:'成年期 · 30岁', stageType:'adult', title:'朋友的信息轰炸', mapX:52, mapY:65, landmark:'💬 朋友圈群聊',
+        scene:'朋友们在群聊里热火朝天地发着表情包、截图和照片。你看不清那些图和文字，读屏软件也只能读出文件名。你很想参与，但不知道他们在聊什么。',
+        sceneSemi:'你看到朋友发了一条纯图片动态，只配了三个字"太美了！"。你突然想起群里有个视力障碍的朋友——他只能听到读屏软件读出"图片"两个字。',
+        optionA:'在群里主动说明情况，请朋友们发图片时附带文字描述',
+        optionASemi:'在评论区补充图片描述，或直接转发时加上文字说明',
+        optionB:'默默退出群聊，觉得大家在另一个世界',
+        optionBSemi:'没多想，继续往下刷动态',
+        feedbackA:{emotion:'你教会了朋友们一个重要的道理：真正的分享，是让每个人都能"看见"。从此以后，群里的每张图多了一行简短的文字描述——这小小的改变，让这个群变得更有温度。',knowledge:'"图片替代文本"（Alt Text）是数字无障碍的基础之一。在微信中，长按图片可以选择"提取文字"。'},
+        feedbackASemi:{emotion:'你的一条文字描述，让一个原本被"隔离"在图片之外的人，也能感受到那片风景。数字无障碍不是什么高科技——有时候只是多发一行字而已。',knowledge:'添加图片描述（Alt Text）是数字无障碍的基础。发图时多写一句话，就能让视力障碍者"看到"你分享的美好。'},
+        feedbackB:{emotion:'看着99+的消息却无法参与，那种被隔在一层玻璃后的孤独感，不需要眼睛也能感受到。但请别走——不是他们不想带你玩，是他们还没有意识到。',knowledge:'社交平台上，每发送10条消息就有3条以上是纯图片或表情——这对视力障碍者形成了巨大的信息壁垒。'},
+        feedbackBSemi:{emotion:'你划了过去，但他永远不知道那张图里是什么。在这个"读图时代"，我们每天都在无意中制造着成千上万的无形障碍。从下一张图开始，试着多写一行字吧。',knowledge:'社交平台上每10条消息就有3条以上是纯图片，对视力障碍者形成了信息壁垒。一行文字描述就能消除这个障碍。'},
+        hasRenovation:false, renovation:null
+      },
+      { id:6, stage:'成年期 · 35岁', stageType:'adult', title:'超市里的迷宫', mapX:80, mapY:62, landmark:'🛒 万家生活超市',
+        scene:'你想给家人做一顿饭，独自去超市采购。货架上的商品琳琅满目，但价格标签太小，你看不清。不同品牌的酱油瓶摸起来几乎一样，你不知道哪个是生抽哪个是老抽。',
+        sceneSemi:'你在超市看到一个视障人士在货架前站了很久。他正拿着两个几乎一模一样的瓶子反复触摸，表情困惑——瓶子的标签太小，他完全分不清哪个是生抽哪个是老抽。',
+        optionA:'找到超市工作人员请求帮助选购，并向超市建议增设盲文标签或语音提示',
+        optionASemi:'上前询问他需要找什么，帮他识别商品信息',
+        optionB:'随便拿了几瓶调味料，回家后发现买错了，扔掉算了',
+        optionBSemi:'继续自己的购物，觉得"超市店员应该会帮忙的"',
+        feedbackA:{emotion:'一次简单的求助，可能推动一个超市品牌的无障碍升级。你的建议也许会让未来的购物体验变得更好——不仅为你，也为所有看不清标签的老人。',knowledge:'部分发达国家超市已实现"无障碍购物"：盲文价签、扫码语音播报、手机APP导航货架位置。'},
+        feedbackASemi:{emotion:'帮他找到那瓶生抽可能只需要三十秒，但这三十秒让他可以完成一件最日常不过的事。下一次你逛超市的时候，或许也会注意到那些标签可以设计得更大一些。',knowledge:'部分发达国家超市已有盲文价签和扫码语音播报。帮助视障人士快速识别商品是简单有效的日常支持。'},
+        feedbackB:{emotion:'买错一瓶酱油不是什么大事，但一次次的买错、一次次的放弃，累积起来就是"无法正常生活"的无力感。购物不该是一场赌博，而应该是每个人都能自主完成的日常。',knowledge:'超市是日常生活中最频繁的公共场所之一。商品信息的可获取性直接影响视力障碍人士的生活质量和独立性。'},
+        feedbackBSemi:{emotion:'你继续推着购物车走了。他还在那两个瓶子之间犹豫——不是优柔寡断，是真的分不清。超市里最习以为常的事情，对有些人来说却是一场小小的冒险。',knowledge:'超市的商品标签对视力障碍者和老年人都是障碍。一个简单的扫码语音播报功能就能让购物变得独立自主。'},
+        hasRenovation:true,
+        renovation:{location:'🛒 万家生活超市食品区',scene:'商品标签字体太小，缺乏语音或触觉识别方式。',before:'所有商品仅靠小字体纸质价签标注信息，外观相似的液体调料瓶没有任何触觉区分设计。',after:'增设了电子价签，支持手机APP扫码语音播报商品信息。同品类商品增加触觉标识，超市APP支持"语音导航"。'}
+      }
+    ],
+    endings:{
+      high:{title:'高共情 · 明眼人',levelText:'共情等级：明眼人',text:'你深刻地理解了视力障碍者在信息获取和独立出行上面临的重重困难。你用"心"看见了他们用眼睛看不见的世界。\n\n真正的"看见"不依赖视力，而是依赖一颗愿意理解的心。希望你将这份洞察带入生活——下次发图时多加一句描述，看到盲道被占时顺手移开障碍。\n\n每一点微小的改变，都能让世界变得更"可见"、更温暖。'},
+      mid:{title:'中共情 · 同行者',levelText:'共情等级：同行者',text:'你对视力障碍者的处境有了一定的理解。但要更深入地感受，还需要更多的"换位思考"。\n\n视障不是看不见，而是另一种"看见"的方式。每个人都有看不见的东西——偏见、恐惧、理所当然。'},
+      low:{title:'低共情 · 初学者',levelText:'共情等级：初学者',text:'这段旅程可能让你意识到：原来视力障碍者的世界和你想象的完全不同。\n\n信息无障碍不是一个技术问题，而是一个观念问题。每一条未加描述的图片、每一张过小的标签都是无形的障碍。改变从注意到开始。'}
+    }
+  },
+  hearing: {
+    name: '听力障碍',
+    icon: '🦻',
+    iconImg: '听障.png',
+    color: '#9B8EBF',
+    bgGradient: [['0%','#F3E5F5'],['100%','#FFF3E0']],
+    desc: '以听障者的视角聆听无声世界',
+    events: [
+      { id:1, stage:'儿童期 · 8岁', stageType:'child', title:'听不见的课堂', mapX:32, mapY:32, landmark:'🏫 阳光小学',
+        scene:'数学老师在讲台上讲一道重要题型，周围的同学都在点头。你盯着老师的嘴唇——读唇只能捕捉到约30%的信息。你想举手说"能重复一遍吗"，但已经第三次了。',
+        sceneSemi:'你坐在教室里，注意到旁边有个同学一整节课都在盯着老师的嘴唇。老师讲得飞快，其他同学刷刷记笔记，他却一次次欲言又止。',
+        optionA:'课后向老师坦诚情况，请求老师讲课时尽量面对学生，并在PPT上多写要点',
+        optionASemi:'课后主动把自己的笔记分享给他，并建议老师提供PPT讲义',
+        optionB:'埋头抄同桌的笔记，假装自己听懂了',
+        optionBSemi:'觉得"他应该自己想办法"，收拾书包走了',
+        feedbackA:{emotion:'你为自己争取了平等的学习机会。老师一个简单的转身，可能让你错过关键内容。大声说出来的需要不是"给人添麻烦"，而是帮助老师成为更好的教育者。',knowledge:'听力障碍学生在普通班级中，如果能获得合理的教学调整，其学习效果可以提高40%以上。融合教育的关键是"合理便利"而非"降低标准"。'},
+        feedbackASemi:{emotion:'你共享的不只是几页笔记，而是一整堂课的内容——和一个同学被尊重的学习机会。他是听不见，不是学不会。一个小小的分享，足以弥合一整节课的差距。',knowledge:'听力障碍学生在普通班级中，如果能获得合理的教学调整，学习效果可以提高40%以上。同学之间分享笔记是最直接的互助方式。'},
+        feedbackB:{emotion:'假装听懂的日子，每天都在焦虑和自我怀疑中度过。你不需要"装得和别人一样"——你只需要让环境适应你的方式。听不见不等于学不会，只是需要不同的通道。',knowledge:'全国约有2780万听力障碍人士。积极的课堂参与和师生沟通对听力障碍学生的学业成绩有显著正面影响。'},
+        feedbackBSemi:{emotion:'你走了，但他还在对着老师模糊的口型猜了整整一节课的内容。不是每个人都"有办法"——有时候，他们就缺一个愿意分享笔记的邻座。',knowledge:'全国约有2780万听力障碍人士。在普通班级中，听力障碍学生最需要的支持往往来自周围的同学。'},
+        hasRenovation:false, renovation:null
+      },
+      { id:2, stage:'青少年期 · 14岁', stageType:'teen', title:'马路上的危险', mapX:62, mapY:28, landmark:'🚸 学校附近斑马线',
+        scene:'放学路上，你和朋友打闹着走到了一个没有红绿灯的斑马线。一辆电动车从侧面快速驶来，疯狂按喇叭。朋友一把拉住了你——你完全没有听到。',
+        sceneSemi:'你走在人行道上，看到前面有个学生戴着助听器走在斑马线上。身后一辆电动车正疯狂鸣笛，车速很快——但他完全没有任何反应。',
+        optionA:'感谢朋友后，开始注意用视觉来弥补听觉——过马路多看两侧，养成"左右左"的习惯',
+        optionASemi:'快步上前轻轻拍他肩膀，示意后方有车、注意安全',
+        optionB:'觉得太丢脸了，甩开朋友的手独自跑回家',
+        optionBSemi:'觉得"鸣笛这么大声肯定能听到"，继续走自己的路',
+        feedbackA:{emotion:'朋友拉了你的那一把，是友谊最好的模样。而你决定从这次惊险中学习——用眼睛来"听"世界。从此过马路先看再走，这是你给自己最珍贵的礼物：安全意识。',knowledge:'听力障碍者在交通环境中主要通过视觉获取信息。国际通行的做法包括：更多的视觉警示标识、闪烁信号灯、路口地面振动提示等。'},
+        feedbackASemi:{emotion:'你轻轻一拍，让他避免了可能的交通事故。有时候帮助不需要什么专业知识——只是注意到别人的处境，并且不假思索地伸出援手。',knowledge:'听力障碍者在交通环境中主要依赖视觉。轻轻拍肩或挥手是提醒听力障碍者注意危险的最直接方式。'},
+        feedbackB:{emotion:'被惊吓后的羞愧感是正常的，但你不必推开关心你的人。每个人都有自己的"弱点"——你的恰好与听觉有关，但那不代表你比别人"笨"或"弱"。',knowledge:'听力障碍者在交通事故中的风险比听力正常者高出约30%。养成"多看一眼"的习惯可以有效降低风险。'},
+        feedbackBSemi:{emotion:'你继续走着，但那个孩子险些被撞。不是所有的危险都能被听到——下次看到这样的情况，请用最简单的方式提醒：拍一下肩膀，就能改变一切。',knowledge:'听力障碍者在交通事故中的风险比听力正常者高约30%。作为路人，轻轻拍肩是提醒他们注意危险的有效方式。'},
+        hasRenovation:true,
+        renovation:{location:'🚸 学校附近无信号灯斑马线',scene:'斑马线无视觉警示设备，仅依赖声音交通信号。',before:'这是一条没有红绿灯的人行横道，完全依赖行人和司机的"眼神交流"和声音警示。听力障碍者无法听到车辆鸣笛。',after:'斑马线两端安装了闪烁警示灯，当行人过街时自动亮起。同时增设了地面振动警示条。'}
+      },
+      { id:3, stage:'成年期 · 22岁', stageType:'adult', title:'电话面试的困境', mapX:76, mapY:18, landmark:'📱 远程面试',
+        scene:'你投了多年的简历，终于等来了一个电话面试。手机震动了——你盯着屏幕上的来电显示，却不敢接。你知道自己听不太清对方说什么，电话里也没有字幕。',
+        sceneSemi:'你是一起参加面试的候选人之一。面试官正给另一位候选人打电话，但始终无人接听。你注意到那个人正坐在角落里盯着手机，表情焦虑——他有听力障碍。',
+        optionA:'不接电话，立即发短信说明情况，请求改用视频面试或文字沟通',
+        optionASemi:'提醒面试官这位候选人有听力障碍，建议改用文字沟通',
+        optionB:'强忍着接了电话，结果因为听不清回答得牛头不对马嘴',
+        optionBSemi:'心里暗喜少了个竞争对手，默不作声',
+        feedbackA:{emotion:'你的机智和勇敢让公司看到了你的适应能力和沟通意识。不接电话不是逃避，而是找到更适合自己的方式。一个好的公司会因为你的能力而录用你。',knowledge:'目前已有多种辅助听力障碍者进行电话沟通的工具：语音转文字APP、视频通话、中继服务。'},
+        feedbackASemi:{emotion:'你的一句话给了他一个公平的机会。面试比的是能力，不是谁能接电话。一个好的公司会因为你的提醒，更欣赏你的格局和同理心。',knowledge:'《残疾人就业条例》要求用人单位在招聘中提供合理便利。帮听力障碍求职者找到替代沟通方式，其他人也完全可以做到。'},
+        feedbackB:{emotion:'挂掉电话后的那种挫败感——不是因为能力不够，而是因为沟通方式不适合你。就像让一个左手写字的人用右手考试。这不公平，但请记住：问题不在你。',knowledge:'电话面试对听力障碍者可能是最大的招聘壁垒。但根据《残疾人就业条例》，求职者有权要求合理的沟通方式调整。'},
+        feedbackBSemi:{emotion:'少一个竞争对手当然好，但这个"优势"建立在信息不对等之上。真正的公平不是踩着别人往上爬，而是让每个人都能在同一水平线上竞争。',knowledge:'电话面试对听力障碍者可能是最大的招聘壁垒。公平的竞争环境需要每个人意识到并提供合理的调整方式。'},
+        hasRenovation:false, renovation:null
+      },
+      { id:4, stage:'成年期 · 27岁', stageType:'adult', title:'医院叫号系统', mapX:32, mapY:58, landmark:'🏥 市第一人民医院',
+        scene:'你挂好了号，坐在候诊区等待。叫号屏幕滚动着号码，但电子叫号的声音你听不清。你不知道自己是否已经被叫到——只能每隔几分钟站起来走到屏幕前查看。',
+        sceneSemi:'你在医院候诊，注意到隔壁座位上的人神情紧张，每过两分钟就站起来走到屏幕前看一眼。后来你发现了——叫号只有语音播报，屏幕上的数字变化没有明显的视觉提示。',
+        optionA:'向护士站说明情况，请她们在轮到你时来通知你',
+        optionASemi:'在他再次站起来时轻轻告诉他："你的号码快到了，我帮你看着"',
+        optionB:'就坐在那里干等，错过叫号后再重新排队',
+        optionBSemi:'继续低头玩手机，觉得这不关你的事',
+        feedbackA:{emotion:'你让医院的护士注意到了这个被忽视的细节。她们也许从未想过——叫号系统对某些人来说是完全无用的。你的提醒不仅帮了自己，也可能促使医院改进系统。',knowledge:'医院叫号系统应包含视觉、听觉和触觉等多种方式。部分智能医院已经实现了手机APP推送叫号通知。'},
+        feedbackASemi:{emotion:'你是他身边唯一注意到这个困境的人。"我帮你看着"这五个字，让他终于可以安心地在候诊区坐下，不用一遍遍站起来查看。善意有时候就是五秒钟的主动。',knowledge:'医院叫号系统对听力障碍者极不友好。主动帮忙留意叫号是简单有效的日常帮助。'},
+        feedbackB:{emotion:'错过叫号、重新排队、再错过……这样的循环让你在医院的每一分钟都备受煎熬。医疗环境应该治愈人，而不是制造新的焦虑。',knowledge:'听力障碍者在就医过程中平均每次要多花费1-2小时，其中大部分时间浪费在信息传递环节。'},
+        feedbackBSemi:{emotion:'你继续刷着手机，他又站起来了一次。一共十二次——这是他在候诊的一小时里站起来查看的次数。他本该像你一样，安心地坐着等。',knowledge:'听力障碍者在就医过程中平均每次要多花费1-2小时。注意到他们的困境并提供帮助，能大大改善就医体验。'},
+        hasRenovation:true,
+        renovation:{location:'🏥 市第一人民医院候诊大厅',scene:'叫号系统仅有语音播报，缺乏多元提示方式。',before:'叫号系统完全依赖声音播报。屏幕显示字号偏小，无视觉强化提示。听力障碍患者极易错过。',after:'增设了振动叫号器——患者挂号后领取小型振动器，轮到自己时会强烈振动。大屏幕增加闪烁提示，同时支持手机端接收叫号推送。'}
+      },
+      { id:5, stage:'成年期 · 30岁', stageType:'adult', title:'重要的团队会议', mapX:56, mapY:60, landmark:'💼 公司会议室',
+        scene:'公司晨会上，同事们你一言我一语地讨论新项目。大家语速很快，有人甚至边吃东西边说话。你努力读着每个人的嘴唇，但信息支离破碎。轮到你发言时，你完全不知道该说什么。',
+        sceneSemi:'你在公司开会，发现一个新同事全程极少发言。大家讨论得热火朝天，他却一直盯着桌面看。后来你注意到他偶尔抬头看着发言人——他在读唇，但语速太快了，他跟得很吃力。',
+        optionA:'会前就向领导说明情况，建议会议使用实时字幕软件或安排专人做纪要',
+        optionASemi:'主动整理会议纪要发到群里，并私下建议下次使用实时字幕',
+        optionB:'假装自己在思考，全程低着头做自己的事',
+        optionBSemi:'觉得"这不关我的事"，继续埋头记自己的笔记',
+        feedbackA:{emotion:'你让整个团队开始重新思考"沟通"这件事。实时字幕不仅帮助你，也让外国同事、远程参与的同事以及所有需要回顾会议内容的人受益。无障碍往往会让所有人都更方便。',knowledge:'实时字幕技术已相当成熟——微软Teams、Google Meet、Zoom等主流视频会议软件均内置此功能。'},
+        feedbackASemi:{emotion:'你整理的一份纪要，可能是他今天唯一能"参与"会议的方式。而你的建议也许会让团队采用实时字幕——这会让所有人都受益，包括远程同事和需要回顾的人。',knowledge:'实时字幕技术已相当成熟，Teams、Zoom等均内置该功能。分享纪要、开启字幕，能让会议对所有人公平。'},
+        feedbackB:{emotion:'坐在会议室里的45分钟，像是被关在一个透明罩子里——能看到大家在讨论，但隔着一层无声的玻璃。不被看见的努力，比"听不见"本身更让人疲惫。',knowledge:'职场中的"沟通障碍"是听力障碍人士最大的职业发展挑战。文字纪要、实时字幕等解决方案可以大幅提升工作效率。'},
+        feedbackBSemi:{emotion:'你是他旁边的同事，却选择了沉默。一场45分钟的会议对他来说只是看了一出哑剧。你能做的太多——一份纪要、一个建议、甚至一次随口的提醒。但你什么都没做。',knowledge:'职场沟通无障碍不是技术难题，而是意识问题。一份会议纪要、开启字幕，都只需要几秒钟。'},
+        hasRenovation:false, renovation:null
+      },
+      { id:6, stage:'成年期 · 33岁', stageType:'adult', title:'电影院的邀请', mapX:80, mapY:72, landmark:'🎬 城市之光电影院',
+        scene:'喜欢的人约你去看最新上映的电影。你激动又忐忑——国内大部分电影院不提供字幕。你能看到画面，但听不懂台词。你不想拒绝这次约会，但也不想全程尴尬地猜剧情。',
+        sceneSemi:'你约了一个听力障碍的朋友看电影。他很犹豫，说"我可能看不太懂"。你想起大部分电影院确实没有字幕——对他来说，看电影就像看一部全程静音的MV。',
+        optionA:'提前说明情况，建议选择提供无障碍字幕场次的影院，或改看有字幕的影片',
+        optionASemi:'搜索提供字幕场次的影院，或直接选一部本身有字幕的影片',
+        optionB:'硬着头皮去了，全程微笑点头，其实完全没看懂',
+        optionBSemi:'觉得换个影院太麻烦了，随便买了最近的场次',
+        feedbackA:{emotion:'你说出了真实的需求，而对方没有因此退缩——这个人值得珍惜。无障碍字幕场次不仅是技术问题，更是一种态度的表达：娱乐的权利属于每一个人。',knowledge:'部分影院已开始尝试"无障碍放映场次"——在银幕下方显示字幕，或为有需要的人提供便携字幕设备。'},
+        feedbackASemi:{emotion:'你多花了几分钟搜索，但换来的是朋友两个小时的专注和感动。对你来说的"平常"，对他来说曾是"不可能"。电影是所有人的梦想——你帮他实现了。',knowledge:'部分影院已有"无障碍字幕场次"。作为朋友，提前搜索字幕场次是让听障伙伴参与娱乐的最直接方式。'},
+        feedbackB:{emotion:'坐在黑暗的影院里，看着身边人随着剧情笑或流泪，而你只能靠画面来猜测。这种"近在咫尺却遥不可及"的感觉，比一个人看电影还要孤独。',knowledge:'电影字幕在许多国家是法定要求。在中国，一些公益组织已开始推动"无障碍电影"项目。'},
+        feedbackBSemi:{emotion:'你觉得"都一样"，但他的两个小时是猜剧情，你的是享受。他全程微笑——不是因为看懂了，而是不想让你失望。关系的温度，往往藏在那些被忽略的细节里。',knowledge:'电影字幕在许多国家是法定要求。关注朋友的无障碍需求，是真正"看见"对方的开始。'},
+        hasRenovation:true,
+        renovation:{location:'🎬 城市之光电影院',scene:'影院缺乏无障碍字幕放映和无障碍观影设备。',before:'影院所有放映厅均以常规方式播放影片，不提供对白字幕或无障碍字幕选项。听力障碍观众无法理解电影情节。',after:'每周固定时段开设"无障碍字幕场次"，银幕下方显示完整对白字幕。影院提供便携式字幕眼镜，购票APP增加"字幕场次"筛选选项。'}
+      }
+    ],
+    endings:{
+      high:{title:'高共情 · 明眼人',levelText:'共情等级：明眼人',text:'你深度理解了听力障碍者在一个"以声音为中心"的世界里每天面对的信息壁垒。你用"眼睛"学会了倾听，用"心"感知了那些无声的需求。\n\n沟通的本质不是声音，而是理解和被理解。你的共情已经超越了障碍本身——请将这种理解带入生活：开会时分享纪要，看电影时关心字幕，聊天时多用文字。\n\n无声的世界同样丰富，只是需要不同的倾听方式。'},
+      mid:{title:'中共情 · 同行者',levelText:'共情等级：同行者',text:'你初步走进了无声的世界，感受到了一些不便，但还有更多的细节等待你去发现。\n\n听力障碍者面临的不是"听不见"本身，而是被排除在信息流之外的孤独。简单的举措——一条文字消息、一份会议纪要——都能带来改变。'},
+      low:{title:'低共情 · 初学者',levelText:'共情等级：初学者',text:'你可能第一次意识到：原来"听不见"会带来这么多连锁反应——从课堂到职场，从马路到电影院。\n\n声音构建了我们日常信息交换的大部分通道。希望你能重新体验，用更敏锐的"眼睛"和更开放的"心"，去感受那无声而丰富的世界。'}
+    }
+  }
+};
+
+/* ============ 地标配置 ============ */
+const LANDMARKS = [
+  { id: 'school', icon: '🏫', name: '学校', x: 20, y: 15 },
+  { id: 'hospital', icon: '🏥', name: '医院', x: 25, y: 35 },
+  { id: 'office', icon: '🏢', name: '办公楼', x: 70, y: 40 },
+  { id: 'mall', icon: '🛒', name: '商场', x: 20, y: 58 },
+  { id: 'transport', icon: '🚦', name: '交通娱乐', x: 70, y: 70 },
+  { id: 'leisure', icon: '🎭', name: '休闲区域', x: 45, y: 85 }
+];
+
+/* ============ 地标与事件映射 ============ */
+// 每个地标对应每个障碍类型的哪个事件（1-6）
+const EVENT_MAP = {
+  school:     { physical: 1, visual: 1, hearing: 1 },
+  transport:  { physical: 2, visual: 2, hearing: 2 },
+  office:     { physical: 3, visual: 3, hearing: 3 },
+  hospital:   { physical: 4, visual: 4, hearing: 4 },
+  leisure:    { physical: 5, visual: 5, hearing: 5 },
+  mall:       { physical: 6, visual: 6, hearing: 6 }
+};
+
+/* ============================================================
+   用户系统 (localStorage)
+   ============================================================ */
+function loadUsers() {
+  try { return JSON.parse(localStorage.getItem('anotherEyes_users') || '[]'); }
+  catch(e) { return []; }
+}
+function saveUsers(users) {
+  localStorage.setItem('anotherEyes_users', JSON.stringify(users));
+}
+function getCurrentUser() {
+  const username = localStorage.getItem('anotherEyes_current');
+  if (!username) return null;
+  const users = loadUsers();
+  return users.find(u => u.username === username) || null;
+}
+function setCurrentUser(username) {
+  localStorage.setItem('anotherEyes_current', username);
+}
+
+/* ============================================================
+   游戏状态
+   ============================================================ */
+let currentMode = 'immersive'; // 'immersive' or 'semi'
+let currentLandmarkId = null;  // 当前选中的地标
+let currentType = null;        // 当前选择的障碍类型
+let currentEventId = null;     // 当前事件ID (如 'physical-1')
+let lastChoiceCorrect = false;
+
+const TOTAL_EVENTS = 18;
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) { el.classList.add('active'); }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showToast(msg, duration = 2000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timeout);
+  t._timeout = setTimeout(() => t.classList.remove('show'), duration);
+}
+
+// ============ 角色插画辅助 ============
+function getStageCharArt(type, stageType) {
+  return CHAR_ART[`${type}_${stageType}`] || '';
+}
+
+// ============ 模式切换 ============
+function getModeLabel() {
+  return currentMode === 'immersive' ? '🎭 沉浸模式' : '👁 半沉浸模式';
+}
+function toggleModeAuth() {
+  currentMode = currentMode === 'immersive' ? 'semi' : 'immersive';
+  document.getElementById('mode-toggle-label').textContent = getModeLabel();
+  showToast(currentMode === 'immersive' ? '已切换为沉浸模式' : '已切换为半沉浸模式');
+}
+function toggleModeMap() {
+  currentMode = currentMode === 'immersive' ? 'semi' : 'immersive';
+  document.getElementById('map-mode').textContent = getModeLabel();
+  showToast(currentMode === 'immersive' ? '已切换为沉浸模式' : '已切换为半沉浸模式');
+  // 保存到用户数据
+  const user = getCurrentUser();
+  if (user) {
+    user.mode = currentMode;
+    const users = loadUsers();
+    const idx = users.findIndex(u => u.username === user.username);
+    if (idx >= 0) users[idx] = user;
+    saveUsers(users);
+  }
+}
+
+// ============ 登录/注册逻辑 ============
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+  if (tab === 'login') {
+    document.querySelectorAll('.auth-tab')[0].classList.add('active');
+    document.getElementById('login-form').classList.add('active');
+  } else {
+    document.querySelectorAll('.auth-tab')[1].classList.add('active');
+    document.getElementById('register-form').classList.add('active');
+  }
+  document.getElementById('login-error').textContent = '';
+  document.getElementById('reg-error').textContent = '';
+}
+
+function doRegister() {
+  const username = document.getElementById('reg-username').value.trim();
+  const password = document.getElementById('reg-password').value.trim();
+  const errEl = document.getElementById('reg-error');
+  if (!username) { errEl.textContent = '请输入用户名'; return; }
+  if (password.length < 4) { errEl.textContent = '密码至少4位'; return; }
+  const users = loadUsers();
+  if (users.find(u => u.username === username)) { errEl.textContent = '用户名已存在'; return; }
+  const newUser = { username, password, empathyScore: 0, completedEvents: [], correctCount: 0, wrongCount: 0, renoCount: 0, mode: currentMode };
+  users.push(newUser);
+  saveUsers(users);
+  setCurrentUser(username);
+  showToast('🎉 注册成功！欢迎来到游戏~');
+  enterMap();
+}
+
+function doLogin() {
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value.trim();
+  const errEl = document.getElementById('login-error');
+  if (!username || !password) { errEl.textContent = '请填写用户名和密码'; return; }
+  const users = loadUsers();
+  const user = users.find(u => u.username === username && u.password === password);
+  if (!user) { errEl.textContent = '用户名或密码错误'; return; }
+  // 恢复用户的模式设置
+  if (user.mode) currentMode = user.mode;
+  setCurrentUser(username);
+  showToast('👋 欢迎回来，' + username + '！');
+  enterMap();
+}
+
+function doLogout() {
+  if (!confirm('确定要退出登录吗？')) return;
+  localStorage.removeItem('anotherEyes_current');
+  showScreen('screen-auth');
+}
+
+// ============ 进入地图 ============
+function enterMap() {
+  document.getElementById('mode-toggle-label').textContent = getModeLabel();
+  renderMap();
+  showScreen('screen-map');
+}
+
+// ============ 地图渲染 ============
+function renderMap() {
+  const user = getCurrentUser();
+  if (!user) { showScreen('screen-auth'); return; }
+
+  const completed = user.completedEvents || [];
+  const doneCount = completed.length;
+  const allDone = doneCount >= TOTAL_EVENTS;
+  const progressPct = Math.round((doneCount / TOTAL_EVENTS) * 100);
+
+  // 更新头部
+  document.getElementById('map-avatar').textContent = user.username.charAt(0).toUpperCase();
+  document.getElementById('map-username').textContent = user.username;
+  document.getElementById('map-progress').textContent = `📍 已探索 ${doneCount}/${TOTAL_EVENTS} 个地点`;
+  document.getElementById('map-score').textContent = `❤️ ${user.empathyScore || 0}`;
+  document.getElementById('map-mode').textContent = getModeLabel();
+
+  // SVG城市背景 + CSS渐变，地标动态覆盖
+  const mapContainer = document.getElementById('map-container');
+  // 清除旧地标（保留SVG背景）
+  mapContainer.querySelectorAll('.map-landmark').forEach(el => el.remove());
+
+  // 渲染地标
+  LANDMARKS.forEach(lm => {
+    const types = ['physical', 'visual', 'hearing'];
+    const allCompleted = types.every(t => {
+      const eventNum = EVENT_MAP[lm.id][t];
+      return completed.includes(`${t}-${eventNum}`);
+    });
+    const someCompleted = types.some(t => {
+      const eventNum = EVENT_MAP[lm.id][t];
+      return completed.includes(`${t}-${eventNum}`);
+    });
+
+    const dot = document.createElement('div');
+    dot.className = 'map-landmark';
+    dot.style.left = lm.x + '%';
+    dot.style.top = lm.y + '%';
+    dot.title = lm.name;
+    dot.innerHTML = `
+      <div class="landmark-dot ${allCompleted ? 'completed' : (someCompleted ? '' : 'pulse')}">
+        ${allCompleted ? '✓' : lm.icon}
+      </div>
+      <div class="landmark-label">${lm.name}</div>
+    `;
+    dot.onclick = () => openLandmarkModal(lm);
+    mapContainer.appendChild(dot);
+  });
+
+  // 检查是否所有事件完成
+  if (allDone) {
+    setTimeout(() => showEnding(), 600);
+  }
+}
+
+// ============ 打开地标选择 Modal ============
+function openLandmarkModal(landmark) {
+  currentLandmarkId = landmark.id;
+  const user = getCurrentUser();
+  const completed = user.completedEvents || [];
+  const types = [
+    { key: 'physical', name: '肢体障碍', icon: '🦽', iconImg: '肢体障碍.png', color: '#7CB89E', desc: '以轮椅使用者的视角体验世界' },
+    { key: 'visual', name: '视力障碍', icon: '👨\u200d🦯', iconImg: '视障.png', color: '#5B8C9E', desc: '以低视力者的视角感受世界' },
+    { key: 'hearing', name: '听力障碍', icon: '🦻', iconImg: '听障.png', color: '#9B8EBF', desc: '以听障者的视角聆听无声世界' }
+  ];
+
+  let html = `
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="font-size:32px;margin-bottom:4px;">${landmark.icon}</div>
+      <div style="font-size:18px;font-weight:700;color:var(--warm-brown);">${landmark.name}</div>
+      <div style="font-size:13px;color:var(--warm-brown-light);margin-top:2px;">选择体验视角</div>
+    </div>
+    <div class="landmark-type-list">
+  `;
+
+  types.forEach(t => {
+    const eventNum = EVENT_MAP[landmark.id][t.key];
+    const eventId = `${t.key}-${eventNum}`;
+    const isCompleted = completed.includes(eventId);
+    const data = GAME_DATA[t.key];
+    const event = data.events[eventNum - 1];
+
+    html += `
+      <div class="landmark-type-item ${isCompleted ? 'completed' : ''}" onclick="${isCompleted ? '' : `selectLandmarkType('${t.key}')`}">
+        <div class="type-icon-small" style="background:linear-gradient(135deg,${t.color}22,${t.color}11)">
+          <img src="${t.iconImg}" alt="${t.name}" class="type-icon-img">
+        </div>
+        <div class="type-info">
+          <div class="type-name">${t.name}</div>
+          <div class="type-desc">${event.title}</div>
+        </div>
+        <div class="type-status ${isCompleted ? 'done' : 'todo'}">${isCompleted ? '✅ 已完成' : '🔍 探索'}</div>
+      </div>
+    `;
+  });
+
+  html += `
+    </div>
+    <div style="text-align:center;margin-top:16px;">
+      <button class="btn btn-text" onclick="closeLandmarkModal()">取消</button>
+    </div>
+  `;
+
+  document.getElementById('landmark-modal-inner').innerHTML = html;
+  document.getElementById('landmark-modal').classList.add('active');
+}
+
+function closeLandmarkModal() {
+  document.getElementById('landmark-modal').classList.remove('active');
+  currentLandmarkId = null;
+}
+
+function selectLandmarkType(type) {
+  currentType = type;
+  const eventNum = EVENT_MAP[currentLandmarkId][type];
+  currentEventId = `${type}-${eventNum}`;
+  closeLandmarkModal();
+  openEventModal(type, eventNum);
+}
+
+// ============ 打开事件 Modal ============
+function openEventModal(type, eventNum) {
+  const data = GAME_DATA[type];
+  const event = data.events[eventNum - 1];
+  const isSemi = currentMode === 'semi';
+  const charSVG = getStageCharArt(type, event.stageType);
+  const sceneSVG = SCENE_ART[type][eventNum - 1];
+
+  document.getElementById('modal-inner').innerHTML = `
+    <div class="character-portrait">
+      <div class="portrait-svg">${charSVG}</div>
+      <div class="portrait-info">
+        <div class="portrait-name">${isSemi ? '旁观者视角' : data.name} · ${event.stage}</div>
+        <div class="portrait-desc">${event.title}</div>
+      </div>
+    </div>
+    <div class="scene-illustration">${sceneSVG}</div>
+    <div class="scene-header">
+      <span class="scene-stage-tag ${event.stageType}">${event.stage}</span>
+    </div>
+    <div class="scene-text">${isSemi ? (event.sceneSemi || event.scene) : event.scene}</div>
+    <div class="choices">
+      <button class="choice-btn" onclick="makeModalChoice('A')">
+        <span class="choice-letter">A</span>
+        <span>${isSemi ? (event.optionASemi || event.optionA) : event.optionA}</span>
+      </button>
+      <button class="choice-btn" onclick="makeModalChoice('B')">
+        <span class="choice-letter">B</span>
+        <span>${isSemi ? (event.optionBSemi || event.optionB) : event.optionB}</span>
+      </button>
+    </div>
+  `;
+  document.getElementById('event-modal').classList.add('active');
+}
+
+function closeEventModal() {
+  document.getElementById('event-modal').classList.remove('active');
+  currentEventId = null;
+  currentType = null;
+}
+
+// ============ Modal 内做出选择 ============
+function makeModalChoice(choice) {
+  const user = getCurrentUser();
+  if (!user || !currentEventId) return;
+
+  const type = currentType;
+  const eventNum = parseInt(currentEventId.split('-')[1]);
+  const event = GAME_DATA[type].events[eventNum - 1];
+
+  const isCorrect = choice === 'A';
+  lastChoiceCorrect = isCorrect;
+  const points = isCorrect ? 10 : -5;
+
+  // 更新用户数据
+  user.empathyScore = (user.empathyScore || 0) + points;
+  if (!user.completedEvents) user.completedEvents = [];
+  if (!user.completedEvents.includes(currentEventId)) {
+    user.completedEvents.push(currentEventId);
+  }
+  if (!user.correctCount) user.correctCount = 0;
+  if (!user.wrongCount) user.wrongCount = 0;
+  if (!user.renoCount) user.renoCount = 0;
+  if (isCorrect) user.correctCount++; else user.wrongCount++;
+
+  // 保存
+  const users = loadUsers();
+  const idx = users.findIndex(u => u.username === user.username);
+  if (idx >= 0) users[idx] = user;
+  saveUsers(users);
+
+  const isSemi = currentMode === 'semi';
+  const feedback = isCorrect
+    ? (isSemi ? (event.feedbackASemi || event.feedbackA) : event.feedbackA)
+    : (isSemi ? (event.feedbackBSemi || event.feedbackB) : event.feedbackB);
+
+  // 在 Modal 内显示反馈
+  document.getElementById('modal-inner').innerHTML = `
+    <div class="feedback-icon ${isCorrect ? 'positive' : 'negative'}">
+      ${isCorrect ? '💡' : '💭'}
+    </div>
+    <div class="feedback-title">${isCorrect ? '你做出了正确的选择' : '这是一个值得思考的选择'}</div>
+    <div class="feedback-text">${feedback.emotion}</div>
+    <div style="background:var(--warm-cream);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:16px;text-align:left;">
+      <div style="font-size:13px;font-weight:700;color:var(--warm-brown);margin-bottom:6px;">📚 科普小知识</div>
+      <div style="font-size:13px;color:var(--warm-brown-light);line-height:1.7;">${feedback.knowledge}</div>
+    </div>
+    <div class="score-change" style="color:${isCorrect ? 'var(--soft-green)' : 'var(--soft-red)'}">
+      ${isCorrect ? '+' : ''}${points} 共情值
+    </div>
+    <div style="text-align:center;">
+      <button class="btn btn-primary" id="modal-continue-btn" onclick="modalFeedbackContinue()">继续探索 →</button>
+    </div>
+  `;
+
+  // 如果需要改造且选择了正确选项
+  if (event.hasRenovation && isCorrect) {
+    const scoreChange = document.querySelector('#modal-inner .score-change');
+    scoreChange.insertAdjacentHTML('afterend', `
+      <div style="text-align:center;margin-bottom:14px;padding:12px;background:rgba(102,187,106,0.08);border-radius:var(--radius-sm);">
+        <div style="font-size:13px;font-weight:700;color:var(--soft-green);margin-bottom:4px;">🏗️ 城市改造机会</div>
+        <div style="font-size:12px;color:var(--warm-brown-light);margin-bottom:8px;">${event.renovation.location}</div>
+        <button class="btn btn-sm btn-primary" style="background:linear-gradient(135deg,var(--soft-green),#43A047);margin-right:6px;margin-bottom:4px;" onclick="doModalRenovation()">🔧 改造 (+15分)</button>
+        <button class="btn btn-sm btn-text" onclick="skipModalRenovation()">跳过</button>
+      </div>
+    `);
+  }
+}
+
+function modalFeedbackContinue() {
+  closeEventModal();
+  renderMap();
+}
+
+function doModalRenovation() {
+  const user = getCurrentUser();
+  user.empathyScore = (user.empathyScore || 0) + 15;
+  if (!user.renoCount) user.renoCount = 0;
+  user.renoCount++;
+  const users = loadUsers();
+  const idx = users.findIndex(u => u.username === user.username);
+  if (idx >= 0) users[idx] = user;
+  saveUsers(users);
+
+  const renoArea = document.querySelector('#modal-inner div[style*="城市改造机会"]');
+  if (renoArea) {
+    renoArea.innerHTML = `
+      <div style="font-size:24px;">🏗️</div>
+      <div style="font-size:14px;font-weight:700;color:var(--soft-green);">改造成功！+15 共情值</div>
+      <div style="font-size:12px;color:var(--warm-brown-light);margin-top:4px;">城市因为你变得更友好了</div>
+    `;
+  }
+  showToast('🔧 改造成功！+15 共情值 🎉');
+}
+
+function skipModalRenovation() {
+  const renoArea = document.querySelector('#modal-inner div[style*="城市改造机会"]');
+  if (renoArea) renoArea.style.display = 'none';
+  showToast('已跳过城市改造');
+}
+
+// ============ 结局 ============
+function showEnding() {
+  const user = getCurrentUser();
+  const s = user.empathyScore || 0;
+  let level = s >= 80 ? 'high' : (s >= 30 ? 'mid' : 'low');
+  // 综合所有类型的结局文本（取第一个类型的结局作为展示，但文本是通用的）
+  const ending = GAME_DATA.physical.endings[level];
+  const card = document.getElementById('ending-card');
+  const doneCount = user.completedEvents ? user.completedEvents.length : 0;
+
+  const levelColor = level === 'high' ? 'var(--soft-green)' : (level === 'mid' ? 'var(--golden)' : 'var(--soft-red)');
+  const levelBg = level === 'high' ? 'rgba(102,187,106,0.1)' : (level === 'mid' ? 'rgba(124,184,158,0.1)' : 'rgba(239,83,80,0.1)');
+
+  card.innerHTML = `
+    <div class="ending-hero">${ENDING_ART[level]}</div>
+    <div class="ending-title">${ending.title}</div>
+    <div class="ending-rank" style="display:inline-block;padding:6px 20px;border-radius:20px;background:${levelBg};color:${levelColor};font-weight:600;font-size:14px;">${ending.levelText}</div>
+    <div class="ending-score-display" style="margin-top:16px;">
+      <div class="score-num">${s}</div>
+      <div class="score-label">共情值</div>
+    </div>
+    <div style="font-size:14px;color:var(--warm-brown);line-height:1.9;text-align:left;background:var(--warm-cream);border-radius:var(--radius-sm);padding:16px;margin-bottom:16px;white-space:pre-line;">${ending.text}</div>
+    <div class="stats-grid">
+      <div class="stat-item"><div class="stat-val">${doneCount}</div><div class="stat-label">完成事件</div></div>
+      <div class="stat-item"><div class="stat-val">${user.correctCount || 0}</div><div class="stat-label">正确选择</div></div>
+      <div class="stat-item"><div class="stat-val">${user.renoCount || 0}</div><div class="stat-label">城市改造</div></div>
+    </div>
+  `;
+  showScreen('screen-ending');
+}
+
+// ============ 按钮事件 ============
+document.getElementById('btn-replay').onclick = function() {
+  const user = getCurrentUser();
+  if (!user) { showScreen('screen-auth'); return; }
+  user.completedEvents = [];
+  user.empathyScore = 0;
+  user.correctCount = 0;
+  user.wrongCount = 0;
+  user.renoCount = 0;
+  const users = loadUsers();
+  const idx = users.findIndex(u => u.username === user.username);
+  if (idx >= 0) users[idx] = user;
+  saveUsers(users);
+  closeEventModal();
+  closeLandmarkModal();
+  renderMap();
+  showToast('🔄 重新开始探索！');
+  showScreen('screen-map');
+};
+
+document.getElementById('btn-home').onclick = function() {
+  closeEventModal();
+  closeLandmarkModal();
+  renderMap();
+  showScreen('screen-map');
+};
+
+// ============ 初始化 ============
+// 检查是否已有登录用户，自动进入地图
+const autoUser = getCurrentUser();
+if (autoUser) {
+  if (autoUser.mode) currentMode = autoUser.mode;
+  document.getElementById('mode-toggle-label').textContent = getModeLabel();
+  enterMap();
+} else {
+  showScreen('screen-auth');
+}
+
+// Modal 点击遮罩关闭
+document.getElementById('event-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeEventModal();
+});
+document.getElementById('landmark-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeLandmarkModal();
+});
+</script>
+</body>
+</html>
